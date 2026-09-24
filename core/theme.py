@@ -20,6 +20,11 @@ import xml.sax.saxutils as sax
 FONT = "'Segoe UI',Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif"
 FONT_CN = "'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif"
 
+# Semantic version of the design system & component suite.
+# Release flow: bump here -> bump the "· vX.Y.Z" footer literal in every
+# component generator -> regenerate all previews -> tag vX.Y.Z + move vX.
+VERSION = "1.1.0"
+
 # --------------------------------------------------------------------------
 # brand palettes
 # --------------------------------------------------------------------------
@@ -46,6 +51,7 @@ PALETTES = {
         "neb_op_b": 0.22,
         "glow_op": 0.10,
         "grain": "#FFFFFF",
+        "fil_op": 0.05,
     },
     "light": {
         "bg_top": "#FFFFFF",
@@ -69,6 +75,7 @@ PALETTES = {
         "neb_op_b": 0.20,
         "glow_op": 0.06,
         "grain": "#8F6F2C",
+        "fil_op": 0.035,
     },
 }
 
@@ -150,19 +157,46 @@ def microdots(w, h, pal):
     return "".join(out)
 
 
+def filigree(pal, uid="1"):
+    """Diamond brocade lattice — fine gold filigree at very low opacity.
+    A quiet 'woven metal' texture under the starfield, so cards never feel
+    flat or empty while numbers stay the loudest element."""
+    cell = 26.0
+    h2 = cell / 2.0
+    op = pal.get("fil_op", 0.045)
+    g = pal["gold"]
+    return (
+        '<pattern id="fil%s" width="%.1f" height="%.1f" patternUnits="userSpaceOnUse">'
+        '<path d="M%.1f 0 L%.1f %.1f L%.1f %.1f L0 %.1f Z" fill="none" stroke="%s" stroke-width="0.5" opacity="%s"/>'
+        '<circle cx="%.1f" cy="%.1f" r="0.55" fill="%s" opacity="%s"/>'
+        '<circle cx="0" cy="0" r="0.35" fill="%s" opacity="%s"/>'
+        '</pattern>'
+        % (uid, cell, h2, h2, cell, h2, h2, cell, h2, g, op, h2, h2, g, op * 1.6, g, op)
+    )
+
+
 def corner_marks(w, h, pal, ln=11):
-    """Four thin gold L-shaped corner ticks — the 'framed print' detail."""
+    """Four thin gold L-shaped corner ticks + inner diamond studs — the
+    'framed print' detail."""
     g = pal["gold"]
     return (
         '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
         '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
         '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
         '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
+        '<path d="M%.1f %.1f l2.4 -2.4 l2.4 2.4 l-2.4 2.4 z" fill="none" stroke="%s" stroke-width="0.7" opacity="0.5"/>'
+        '<path d="M%.1f %.1f l2.4 -2.4 l2.4 2.4 l-2.4 2.4 z" fill="none" stroke="%s" stroke-width="0.7" opacity="0.5"/>'
+        '<path d="M%.1f %.1f l2.4 -2.4 l2.4 2.4 l-2.4 2.4 z" fill="none" stroke="%s" stroke-width="0.7" opacity="0.5"/>'
+        '<path d="M%.1f %.1f l2.4 -2.4 l2.4 2.4 l-2.4 2.4 z" fill="none" stroke="%s" stroke-width="0.7" opacity="0.5"/>'
         % (
             10.5, 10.5, ln, 10.5, 10.5, ln, g,
             w - 10.5 - ln, 10.5, ln, w - 10.5, 10.5, ln, g,
             10.5, h - 10.5 - ln, ln, 10.5, h - 10.5, ln, g,
             w - 10.5 - ln, h - 10.5 - ln, ln, w - 10.5, h - 10.5, ln, g,
+            22.5, 22.5, g,
+            w - 22.5, 22.5, g,
+            22.5, h - 22.5, g,
+            w - 22.5, h - 22.5, g,
         )
     )
 
@@ -189,9 +223,9 @@ def num_gradient(pal, uid="1"):
 
 
 def card_bg(pal, w, h):
-    """Full background: 3-stop sky + gold/blue nebulas + starfield + grain
-    + hairline frame + gold corner ticks.  id="bg"/"glow" stay stable so
-    existing components that reference url(#glow) keep working."""
+    """Full background: 3-stop sky + gold/blue nebulas + gold brocade + starfield
+    + grain + double hairline frame + gold corner ticks.  id="bg"/"glow" stay
+    stable so existing components that reference url(#glow) keep working."""
     return (
         '<defs>'
         '<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">'
@@ -210,24 +244,29 @@ def card_bg(pal, w, h):
         '<stop offset="0" stop-color="%s" stop-opacity="%s"/>'
         '<stop offset="1" stop-color="%s" stop-opacity="0"/>'
         '</radialGradient>'
+        '%s'
         '</defs>'
         '<rect width="%d" height="%d" fill="url(#bg)"/>'
         '<rect width="%d" height="%d" fill="url(#nebG)"/>'
         '<rect width="%d" height="%d" fill="url(#nebB)"/>'
         '<rect width="%d" height="%d" fill="url(#glow)"/>'
+        '<rect width="%d" height="%d" fill="url(#fil1)"/>'
         '%s'
         '%s'
         '<rect x="0.5" y="0.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="1"/>'
+        '<rect x="2.5" y="2.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="0.6" opacity="0.55"/>'
         '%s'
         % (
             pal["bg_top"], pal.get("bg_mid", pal["bg_top"]), pal["bg_bottom"],
             pal["gold"], pal.get("neb_op_g", 0.16), pal["bg_top"],
             pal.get("nebula", "#2B4B9E"), pal.get("neb_op_b", 0.22), pal["bg_top"],
             pal["gold"], pal.get("glow_op", 0.10), pal["bg_top"],
-            w, h, w, h, w, h, w, h,
+            filigree(pal),
+            w, h, w, h, w, h, w, h, w, h,
             starfield(pal, w, h),
             microdots(w, h, pal),
             w - 1, h - 1, pal["line"],
+            w - 5, h - 5, pal.get("line_soft", pal["line"]),
             corner_marks(w, h, pal),
         )
     )

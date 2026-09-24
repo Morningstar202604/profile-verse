@@ -14,6 +14,7 @@
   <a href="https://github.com/Morningstar202604/profile-verse/forks"><img src="https://img.shields.io/github/forks/Morningstar202604/profile-verse?style=flat&color=%23C9A86A&label=forks" alt="GitHub forks" /></a>
   <a href="https://github.com/Morningstar202604/profile-verse/actions"><img src="https://img.shields.io/github/actions/workflow/status/Morningstar202604/profile-verse/update.yml?style=flat&color=%23C9A86A&label=previews" alt="preview refresh" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Morningstar202604/profile-verse?style=flat&color=%23C9A86A" alt="MIT license" /></a>
+  <a href="https://github.com/Morningstar202604/profile-verse/releases"><img src="https://img.shields.io/github/v/release/Morningstar202604/profile-verse?style=flat&color=%23C9A86A&label=version" alt="v1.1.0" /></a>
   <a href="README.zh.md"><img src="https://img.shields.io/badge/readme-中文-8FB4F5?style=flat" alt="中文版" /></a>
 </p>
 
@@ -287,4 +288,4 @@ New card ideas, theme refinements, bug reports — all welcome. See [CONTRIBUTIN
 
 ## 📜 License
 
-MIT © Morningstar202604
+MIT © Morningstar202604  ·  [VERSIONING](VERSIONING.md)  ·  [CHANGELOG](CHANGELOG.md)

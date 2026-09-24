@@ -91,6 +91,7 @@ def main():
             '%s'
             '%s'
             '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新 · 零服务器</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">streak-card · v1.1.0</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
@@ -113,6 +114,7 @@ def main():
                 CX, th.FONT, pal["muted"],
                 chip(100, 170, "%d 天" % longest, "最长连续", pal),
                 chip(370, 170, "%d 次" % total, "全年贡献", pal),
+                340, th.FONT, pal["dim"],
                 340, th.FONT, pal["dim"],
             )
         )
