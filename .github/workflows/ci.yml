@@ -1,0 +1,42 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate all 16 previews (dark + light)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          for c in impact-card stats-card streak-card typing-card contrib-grid-card tech-stack-card banner-card badge-card; do
+            gen="components/$c/generate_$(echo $c | tr '-' '_').py"
+            for theme in dark light; do
+              out="components/$c/preview/$c.svg"
+              [ "$theme" = "light" ] && out="components/$c/preview/$c-light.svg"
+              USER=Morningstar202604 THEME=$theme OUTPUT="$out" python3 "$gen"
+            done
+          done
+          echo "all 16 previews regenerated"
+
+      - name: Validate SVG XML
+        run: |
+          set -e
+          for f in components/*/preview/*.svg; do
+            python3 -c "import xml.dom.minidom,sys; xml.dom.minidom.parse('$f')" || exit 1
+          done
+          echo "xml ok: $(ls components/*/preview/*.svg | wc -l) files"

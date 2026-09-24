@@ -1,0 +1,99 @@
+# Profile Verse · whole-homepage kit
+# Copy this file into your profile repo as  .github/workflows/profile-verse.yml
+# (your username: morningstar-style profile repo:  <user>/<user> )
+#
+# Generates 8 cards daily (or on manual trigger), commits them, and pushes.
+# Set theme to dark or light — cards also work with the <picture> trick
+# in your README so they follow each visitor's system theme automatically.
+
+name: Profile Verse Cards
+
+on:
+  schedule:
+    - cron: "10 1 * * *"
+  workflow_dispatch:
+    inputs:
+      theme:
+        description: dark or light
+        default: dark
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-verse
+  cancel-in-progress: true
+
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Banner
+        uses: Morningstar202604/profile-verse/components/banner-card@v1
+        with:
+          name: your-github-username
+          output: assets/profile-verse/banner-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Typing
+        uses: Morningstar202604/profile-verse/components/typing-card@v1
+        with:
+          phrases: "Hello, I am a developer;Code under the stars"
+          output: assets/profile-verse/typing-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Stats
+        uses: Morningstar202604/profile-verse/components/stats-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/stats-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Streak
+        uses: Morningstar202604/profile-verse/components/streak-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/streak-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Contribution grid (3D)
+        uses: Morningstar202604/profile-verse/components/contrib-grid-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/contrib-grid-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Tech stack
+        uses: Morningstar202604/profile-verse/components/tech-stack-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/tech-stack-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Badges
+        uses: Morningstar202604/profile-verse/components/badge-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/badge-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Impact (merged PRs by repo star tiers)
+        uses: Morningstar202604/profile-verse/components/impact-card@v1
+        with:
+          users: your-github-username        # multi-account: a,b
+          output: assets/profile-verse/impact-card.svg
+          theme: ${{ inputs.theme }}
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/profile-verse
+          if git diff --cached --quiet; then echo "no changes"; else
+            git commit -m "chore: refresh profile-verse cards [skip ci]"
+            git pull --rebase origin main || git rebase --abort
+            git push
+          fi
