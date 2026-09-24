@@ -113,16 +113,31 @@ def main():
             '</rect>' % (cursor_x, pal["gold"])
         )
 
+        decor = (
+            '<circle cx="320" cy="62" r="52" fill="none" stroke="%s" stroke-opacity="0.10" stroke-width="1"/>'
+            '<circle cx="320" cy="62" r="66" fill="none" stroke="%s" stroke-opacity="0.06" stroke-width="1" stroke-dasharray="1 6"/>'
+            '%s'
+            '<line x1="40" y1="92" x2="600" y2="92" stroke="%s" stroke-width="0.8" opacity="0.7"/>'
+            '<line x1="286" y1="91" x2="354" y2="91" stroke="%s" stroke-width="1.2" opacity="0.8"/>'
+            '<path d="M320 88 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
+            % (pal["gold"], pal["gold"],
+               th.sparkle(584, 34, 6, pal["gold_bright"], 0.7),
+               pal["line"], pal["gold"], pal["gold"])
+        )
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">'
             '%s'
+            '%s'
             '%s%s'
-            '<text x="30" y="106" font-family="%s" font-size="9.5" fill="%s">PROFILE VERSE · typing-card</text>'
+            '<text x="30" y="106" font-family="%s" font-size="9.5" letter-spacing="1" fill="%s">PROFILE VERSE</text>'
+            '<text x="610" y="106" text-anchor="end" font-family="%s" font-size="9.5" letter-spacing="1.5" fill="%s">typing-card</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(PHRASES[0]),
                 th.card_bg(pal, W, H),
+                decor,
                 "".join(texts), cursor,
+                th.FONT, pal["dim"],
                 th.FONT, pal["dim"],
             )
         )

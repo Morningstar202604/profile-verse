@@ -53,15 +53,23 @@ def badge(x, value, label, pal):
         '<linearGradient id="ge%d" x1="0" y1="0" x2="1" y2="1">'
         '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/>'
         '</linearGradient></defs>'
-        '<rect x="%d" y="64" width="%d" height="%d" rx="20" fill="%s" fill-opacity="0.08" stroke="url(#ge%d)" stroke-width="1.6"/>'
+        '<rect x="%d" y="64" width="%d" height="%d" rx="20" fill="url(#pb)" stroke="url(#ge%d)" stroke-width="1.6"/>'
+        '<line x1="%d" y1="65" x2="%d" y2="65" stroke="%s" stroke-width="1.4" opacity="0.8"/>'
+        '<circle cx="%d" cy="96" r="11" fill="%s" opacity="0.16"/>'
+        '<circle cx="%d" cy="96" r="6" fill="none" stroke="%s" stroke-opacity="0.5" stroke-width="0.8"/>'
         '%s'
-        '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="22" font-weight="700" fill="%s">%s</text>'
-        '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="11" fill="%s">%s</text>'
+        '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="23" font-weight="600" fill="url(#gtb)">%s</text>'
+        '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="10.5" letter-spacing="2" fill="%s">%s</text>'
+        '<circle cx="%d" cy="118" r="1.4" fill="%s" opacity="0.8"/>'
+        '<circle cx="%d" cy="118" r="1.4" fill="%s" opacity="0.8"/>'
         % (x, pal["gold"], pal["gold_bright"],
-           x, BADGE_W, BADGE_H, pal["gold"], x,
+           x, BADGE_W, BADGE_H, x,
+           x + 14, x + BADGE_W - 14, pal["gold_bright"],
+           x + 20, pal["gold_bright"], x + 20, pal["gold_bright"],
            star_icon(x + 20, 96, 7, pal["gold_bright"]),
-           x + BADGE_W // 2, 100, th.FONT, pal["gold_bright"], th.esc(value),
-           x + BADGE_W // 2, 121, th.FONT, pal["muted"], th.esc(label))
+           x + BADGE_W // 2 + 12, 101, th.FONT, th.esc(value),
+           x + BADGE_W // 2 + 12, 123, th.FONT, pal["muted"], th.esc(label),
+           x + 24, pal["gold"], x + BADGE_W - 24, pal["gold"])
     )
 
 
@@ -105,21 +113,30 @@ def main():
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="Badges — %s">'
             '%s'
-            '<text x="30" y="40" font-family="%s" font-size="15" font-weight="700" letter-spacing="2.5" fill="%s">BADGES</text>'
-            '<text x="610" y="40" text-anchor="end" font-family="%s" font-size="11" fill="%s">更新于 %s</text>'
-            '<line x1="30" y1="52" x2="610" y2="52" stroke="%s" stroke-width="1"/>'
+            '<path d="M26 40 l4 -5 l4 5 l-4 5 z" fill="%s" opacity="0.95"/>'
+            '<text x="40" y="44" font-family="%s" font-size="14.5" font-weight="700" letter-spacing="3" fill="%s">BADGES</text>'
+            '<text x="610" y="44" text-anchor="end" font-family="%s" font-size="10.5" letter-spacing="1" fill="%s">更新于 %s</text>'
+            '<line x1="40" y1="56" x2="600" y2="56" stroke="%s" stroke-width="1"/>'
+            '<line x1="286" y1="55" x2="354" y2="55" stroke="%s" stroke-width="1.4" opacity="0.8"/>'
+            '<path d="M320 52 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
+            '<defs><linearGradient id="pb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>%s</defs>'
             '%s'
-            '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">%s</text>'
+            '<text x="30" y="%d" font-family="%s" font-size="10" fill="%s">%s</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">badge-card</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
                 th.card_bg(pal, W, H),
+                pal["gold"],
                 th.FONT, pal["gold_bright"],
                 th.FONT, pal["sub"], date,
                 pal["line"],
+                pal["gold"], pal["gold"],
+                pal["panel_top"], pal["panel"], th.num_gradient(pal, "b"),
                 "".join(badges),
                 H - 16, th.FONT, pal["dim"],
                 th.esc("数据来源 GitHub API · 每日自动刷新 · 零服务器" if not BADGES_RAW.strip() else "自定义徽章 · 由输入参数生成 · 零服务器"),
+                H - 16, th.FONT, pal["dim"],
             )
         )
         os.makedirs(os.path.dirname(os.path.abspath(OUTPUT)) or ".", exist_ok=True)

@@ -202,25 +202,35 @@ def main():
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="Contribution Grid — %s">'
             '%s'
-            '<text x="30" y="40" font-family="%s" font-size="15" font-weight="700" letter-spacing="2.5" fill="%s">CONTRIBUTION GRID</text>'
-            '<text x="610" y="40" text-anchor="end" font-family="%s" font-size="11" fill="%s">更新于 %s</text>'
-            '<text x="30" y="64" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
-            '<text x="610" y="64" text-anchor="end" font-family="%s" font-size="11" fill="%s">GitHub · 全年贡献 %d 次</text>'
-            '<line x1="30" y1="82" x2="610" y2="82" stroke="%s" stroke-width="1"/>'
+            '<defs><radialGradient id="lightsweep" cx="0.78" cy="0.22" r="0.55"><stop offset="0" stop-color="%s" stop-opacity="0.12"/><stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient></defs>'
+            '<path d="M26 40 l4 -5 l4 5 l-4 5 z" fill="%s" opacity="0.95"/>'
+            '<text x="40" y="44" font-family="%s" font-size="14.5" font-weight="700" letter-spacing="3" fill="%s">CONTRIBUTION GRID</text>'
+            '<text x="610" y="44" text-anchor="end" font-family="%s" font-size="10.5" letter-spacing="1" fill="%s">更新于 %s</text>'
+            '<text x="40" y="70" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
+            '<text x="610" y="70" text-anchor="end" font-family="%s" font-size="11" letter-spacing="1" fill="%s">GitHub · 全年贡献 %d 次</text>'
+            '<line x1="40" y1="84" x2="600" y2="84" stroke="%s" stroke-width="1"/>'
+            '<line x1="286" y1="83" x2="354" y2="83" stroke="%s" stroke-width="1.4" opacity="0.8"/>'
+            '<path d="M320 80 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
             '%s'
             '%s'
-            '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新 · 零服务器</text>'
+            '%s'
+            '<text x="30" y="%d" font-family="%s" font-size="10" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新 · 零服务器</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">contrib-grid-card</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
                 th.card_bg(pal, W, H),
+                pal["gold_bright"], pal["bg_top"],
+                pal["gold"],
                 th.FONT, pal["gold_bright"],
                 th.FONT, pal["sub"], date_s,
                 th.FONT, pal["text"], th.esc(USER),
                 th.FONT, pal["sub"], total,
-                pal["line"],
+                pal["line"], pal["gold"], pal["gold"],
                 body,
+                '<rect width="%d" height="%d" fill="url(#lightsweep)"/>' % (W, H - 20),
                 legend(pal, H - 26),
+                H - 16, th.FONT, pal["dim"],
                 H - 16, th.FONT, pal["dim"],
             )
         )

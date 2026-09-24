@@ -39,15 +39,21 @@ def ring_dots(pal, n=12, r=R + 14):
     for i in range(n):
         a = 2 * math.pi * i / n
         out.append('<circle cx="%.1f" cy="%.1f" r="1.6" fill="%s" opacity="0.8"/>' % (CX + r * math.cos(a), CY + r * math.sin(a), pal["gold"]))
+    for i in range(60):
+        a = 2 * math.pi * i / 60
+        x1, y1 = CX + (R + 8) * math.cos(a), CY + (R + 8) * math.sin(a)
+        x2, y2 = CX + (R + 12) * math.cos(a), CY + (R + 12) * math.sin(a)
+        out.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1" opacity="0.28"/>' % (x1, y1, x2, y2, pal["gold"]))
     return "".join(out)
 
 
 def chip(x, w, value, label, pal):
     return (
-        '<rect x="%d" y="296" width="%d" height="40" rx="20" fill="%s" fill-opacity="0.10" stroke="%s" stroke-opacity="0.55"/>'
-        '<text x="%d" y="312" text-anchor="middle" font-family="%s" font-size="15" font-weight="700" fill="%s">%s</text>'
-        '<text x="%d" y="327" text-anchor="middle" font-family="%s" font-size="10.5" fill="%s">%s</text>'
-        % (x, w, pal["gold"], pal["gold"], x + w // 2, th.FONT, pal["gold_bright"], th.esc(value), x + w // 2, th.FONT, pal["muted"], th.esc(label))
+        '<rect x="%d" y="296" width="%d" height="40" rx="20" fill="url(#ppanel)" stroke="%s" stroke-opacity="0.6"/>'
+        '<path d="M%d 304 l2 -2.5 l2 2.5 l-2 2.5 z" fill="%s" opacity="0.9"/>'
+        '<text x="%d" y="312" text-anchor="middle" font-family="%s" font-size="15" font-weight="600" fill="url(#gtsk)">%s</text>'
+        '<text x="%d" y="327" text-anchor="middle" font-family="%s" font-size="10.5" letter-spacing="1.5" fill="%s">%s</text>'
+        % (x, w, pal["line"], x + w // 2 - 2, pal["gold"], x + w // 2, th.FONT, th.esc(value), x + w // 2, th.FONT, pal["muted"], th.esc(label))
     )
 
 
@@ -65,17 +71,23 @@ def main():
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="Streak — %s">'
             '%s'
-            '<text x="30" y="40" font-family="%s" font-size="15" font-weight="700" letter-spacing="2.5" fill="%s">STREAK</text>'
-            '<text x="610" y="40" text-anchor="end" font-family="%s" font-size="11" fill="%s">更新于 %s</text>'
-            '<text x="30" y="64" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
-            '<line x1="30" y1="80" x2="610" y2="80" stroke="%s" stroke-width="1"/>'
+            '<defs>%s</defs>'
+            '<path d="M26 40 l4 -5 l4 5 l-4 5 z" fill="%s" opacity="0.95"/>'
+            '<text x="40" y="44" font-family="%s" font-size="14.5" font-weight="700" letter-spacing="3" fill="%s">STREAK</text>'
+            '<text x="610" y="44" text-anchor="end" font-family="%s" font-size="10.5" letter-spacing="1" fill="%s">更新于 %s</text>'
+            '<text x="40" y="70" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
+            '<text x="610" y="70" text-anchor="end" font-family="%s" font-size="11" letter-spacing="1" fill="%s">GitHub · 贡献日历</text>'
+            '<line x1="40" y1="84" x2="600" y2="84" stroke="%s" stroke-width="1"/>'
+            '<line x1="286" y1="83" x2="354" y2="83" stroke="%s" stroke-width="1.4" opacity="0.8"/>'
+            '<path d="M320 80 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
             '<circle cx="%d" cy="%d" r="%d" fill="url(#glow)"/>'
-            '<circle cx="%d" cy="%d" r="%d" fill="none" stroke="%s" stroke-opacity="%s" stroke-width="1.5"/>'
+            '<circle cx="%d" cy="%d" r="%d" fill="none" stroke="url(#grk)" stroke-opacity="%s" stroke-width="1.8"/>'
             '<circle cx="%d" cy="%d" r="%d" fill="none" stroke="%s" stroke-opacity="%s" stroke-dasharray="2 6"/>'
             '%s'
             '<circle cx="%d" cy="%d" r="4" fill="%s"/>'
-            '<text x="%d" y="202" text-anchor="middle" font-family="%s" font-size="46" font-weight="700" fill="%s">%d</text>'
-            '<text x="%d" y="226" text-anchor="middle" font-family="%s" font-size="12" fill="%s">当前连续 · 天</text>'
+            '<circle cx="%d" cy="%d" r="7" fill="%s" opacity="0.25"/>'
+            '<text x="%d" y="204" text-anchor="middle" font-family="%s" font-size="48" font-weight="600" fill="url(#gtsk)">%d</text>'
+            '<text x="%d" y="228" text-anchor="middle" font-family="%s" font-size="11.5" letter-spacing="2" fill="%s">当前连续 · 天</text>'
             '%s'
             '%s'
             '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新 · 零服务器</text>'
@@ -83,16 +95,21 @@ def main():
             % (
                 W, H, W, H, th.esc(USER),
                 th.card_bg(pal, W, H),
+                th.num_gradient(pal, "sk") + '<linearGradient id="grk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % (pal["gold"], pal["gold_bright"], pal["gold"]) + '<linearGradient id="ppanel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % (pal["panel_top"], pal["panel"]),
+                pal["gold"],
                 th.FONT, pal["gold_bright"],
                 th.FONT, pal["sub"], date,
                 th.FONT, pal["text"], th.esc(USER),
-                pal["line"],
+                th.FONT, pal["sub"],
+                pal["line"], pal["gold"], pal["gold"],
                 CX, CY, R + 26,
                 CX, CY, R,
-                pal["gold"], 0.85 if light else 0.5, CX, CY, R + 14, pal["gold"], 0.4 if light else 0.18,
+                0.9 if light else 0.55,
+                CX, CY, R + 14, pal["gold"], 0.4 if light else 0.18,
                 ring_dots(pal),
                 CX, CY - R - 14, pal["gold_bright"],
-                CX, th.FONT, pal["gold_bright"], cur,
+                CX, CY - R - 14, pal["gold"],
+                CX, th.FONT, cur,
                 CX, th.FONT, pal["muted"],
                 chip(100, 170, "%d 天" % longest, "最长连续", pal),
                 chip(370, 170, "%d 次" % total, "全年贡献", pal),

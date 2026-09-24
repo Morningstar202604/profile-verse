@@ -39,6 +39,11 @@ def stars(pal, n=120, seed=11):
         r = rnd.choice([0.7, 1.0, 1.3, 1.7])
         op = rnd.uniform(0.12, 0.5)
         out.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s" opacity="%.2f"/>' % (x, y, r, pal["star"], op))
+    # a few bright twinkles
+    for _ in range(6):
+        x = rnd.uniform(60, W - 60)
+        y = rnd.uniform(30, H - 40)
+        out.append(th.sparkle(x, y, rnd.choice([4, 5, 6]), pal["gold_bright"], 0.6))
     return "".join(out)
 
 
@@ -46,10 +51,13 @@ def comet(pal):
     """A comet trail arcing across the banner."""
     return (
         '<path d="M -60 208 Q 300 26 640 118 T 1030 52" fill="none" stroke="%s" stroke-width="1.6" stroke-opacity="0.55" stroke-dasharray="1 9" stroke-linecap="round"/>'
-        '<path d="M 640 118 Q 700 132 762 108" fill="none" stroke="%s" stroke-width="2.2" stroke-opacity="0.8" stroke-linecap="round"/>'
+        '<path d="M 640 118 Q 700 132 762 108" fill="none" stroke="%s" stroke-width="2.2" stroke-opacity="0.85" stroke-linecap="round"/>'
         '<circle cx="762" cy="108" r="3.2" fill="%s"/>'
         '<circle cx="762" cy="108" r="8" fill="%s" opacity="0.25"/>'
-        % (pal["gold"], pal["gold_bright"], pal["gold_bright"], pal["gold_bright"])
+        '<path d="M 900 40 Q 934 62 962 56" fill="none" stroke="%s" stroke-width="1.2" stroke-opacity="0.45" stroke-linecap="round"/>'
+        '<circle cx="962" cy="56" r="1.8" fill="%s" opacity="0.7"/>'
+        % (pal["gold"], pal["gold_bright"], pal["gold_bright"], pal["gold_bright"],
+           pal["gold"], pal["gold_bright"])
     )
 
 
@@ -57,44 +65,73 @@ def main():
     pal = th.palette(THEME)
     try:
         name = USER if len(USER) <= 24 else USER[:23] + "\u2026"
-        svg = (
-            '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">'
+        defs = (
             '<defs>'
             '<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">'
-            '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
-            '<radialGradient id="glow" cx="0.5" cy="0.5" r="0.6">'
-            '<stop offset="0" stop-color="%s" stop-opacity="0.20"/>'
+            '<stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/>'
+            '<stop offset="1" stop-color="%s"/></linearGradient>'
+            '<radialGradient id="nebG" cx="0.22" cy="0.10" r="0.62">'
+            '<stop offset="0" stop-color="%s" stop-opacity="0.22"/>'
+            '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>'
+            '<radialGradient id="nebB" cx="0.92" cy="0.88" r="0.6">'
+            '<stop offset="0" stop-color="%s" stop-opacity="0.24"/>'
+            '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>'
+            '<radialGradient id="glow" cx="0.5" cy="0.5" r="0.62">'
+            '<stop offset="0" stop-color="%s" stop-opacity="0.18"/>'
             '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>'
             '<linearGradient id="gtext" x1="0" y1="0" x2="1" y2="0">'
             '<stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/>'
             '<stop offset="1" stop-color="%s"/></linearGradient>'
-            '<filter id="blur" x="-30%%" y="-30%%" width="160%%" height="160%%">'
+            '<filter id="blur1" x="-40%%" y="-40%%" width="180%%" height="180%%">'
+            '<feGaussianBlur stdDeviation="8"/></filter>'
+            '<filter id="blur2" x="-30%%" y="-30%%" width="160%%" height="160%%">'
             '<feGaussianBlur stdDeviation="3.4"/></filter>'
             '</defs>'
             '<rect width="%d" height="%d" fill="url(#bg)"/>'
+            '<rect width="%d" height="%d" fill="url(#nebG)"/>'
+            '<rect width="%d" height="%d" fill="url(#nebB)"/>'
             '<rect width="%d" height="%d" fill="url(#glow)"/>'
+            '%s'
             '%s'
             '<rect x="0.5" y="0.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="1"/>'
             '%s'
-            '<text x="480" y="122" text-anchor="middle" font-family="%s" font-size="46" font-weight="800" fill="%s" filter="url(#blur)">%s</text>'
+            % (
+                pal["bg_top"], pal.get("bg_mid", pal["bg_top"]), pal["bg_bottom"],
+                pal["gold"], pal["bg_top"],
+                pal.get("nebula", "#2B4B9E"), pal["bg_top"],
+                pal["gold"], pal["bg_top"],
+                pal["gold_bright"], pal["gold"], pal["gold_bright"],
+                W, H, W, H, W, H, W, H,
+                stars(pal),
+                th.microdots(W, H, pal),
+                W - 1, H - 1, pal["line"],
+                th.corner_marks(W, H, pal),
+            )
+        )
+        svg = (
+            '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="%s">'
+            '%s'
+            '%s'
+            '<text x="480" y="122" text-anchor="middle" font-family="%s" font-size="46" font-weight="800" fill="%s" filter="url(#blur1)">%s</text>'
+            '<text x="480" y="122" text-anchor="middle" font-family="%s" font-size="46" font-weight="800" fill="%s" filter="url(#blur2)">%s</text>'
             '<text x="480" y="122" text-anchor="middle" font-family="%s" font-size="46" font-weight="800" fill="url(#gtext)">%s</text>'
-            '<line x1="440" y1="142" x2="520" y2="142" stroke="%s" stroke-width="1.5"/>'
-            '<text x="480" y="170" text-anchor="middle" font-family="%s" font-size="13.5" fill="%s">%s</text>'
-            '<text x="28" y="224" font-family="%s" font-size="9.5" fill="%s">PROFILE VERSE · banner-card</text>'
+            '<line x1="444" y1="142" x2="516" y2="142" stroke="%s" stroke-width="1.2" opacity="0.85"/>'
+            '<path d="M480 138 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.95"/>'
+            '<text x="480" y="170" text-anchor="middle" font-family="%s" font-size="13.5" letter-spacing="2.5" fill="%s">%s</text>'
+            '<text x="28" y="224" font-family="%s" font-size="9.5" letter-spacing="1" fill="%s">PROFILE VERSE</text>'
+            '<text x="932" y="224" text-anchor="end" font-family="%s" font-size="9.5" letter-spacing="1.5" fill="%s">banner-card</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
-                pal["bg_top"], pal["bg_bottom"],
-                pal["gold"], pal["bg_top"],
-                pal["gold_bright"], pal["gold"], pal["gold_bright"],
-                W, H, W, H,
-                stars(pal),
-                W - 1, H - 1, pal["line"],
+                defs,
                 comet(pal),
                 th.FONT, pal["gold_bright"], th.esc(name),
+                th.FONT, pal["gold"], th.esc(name),
                 th.FONT, th.esc(name),
                 pal["gold"],
+                pal["gold"],
                 th.FONT, pal["muted"], th.esc(TEXT),
+                th.FONT, pal["dim"],
                 th.FONT, pal["dim"],
             )
         )

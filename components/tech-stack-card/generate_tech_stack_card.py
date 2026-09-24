@@ -42,11 +42,12 @@ def node(x, y, color, label, count, pal, out_pos):
     """One constellation node: glow + dot + label + count chip."""
     ox, oy = out_pos
     return (
-        '<circle cx="%.1f" cy="%.1f" r="10" fill="%s" opacity="0.18"/>'
+        '<circle cx="%.1f" cy="%.1f" r="11" fill="%s" opacity="0.16"/>'
         '<circle cx="%.1f" cy="%.1f" r="4.5" fill="%s"/>'
+        '<circle cx="%.1f" cy="%.1f" r="7.5" fill="none" stroke="%s" stroke-opacity="0.55" stroke-width="0.8"/>'
         '<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="12.5" font-weight="600" fill="%s">%s</text>'
-        '<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="10" fill="%s">%d 个仓库</text>'
-        % (x, y, color, x, y, color,
+        '<text x="%.1f" y="%.1f" text-anchor="middle" font-family="%s" font-size="9.5" letter-spacing="1.5" fill="%s">%d 个仓库</text>'
+        % (x, y, color, x, y, color, x, y, color,
            x + ox, y + oy, th.FONT, pal["text"], th.esc(label),
            x + ox, y + oy + 15, th.FONT, pal["muted"], count)
     )
@@ -95,7 +96,8 @@ def main():
             a = -math.pi / 2 + i * 2 * math.pi / n
             x = CX + RX * math.cos(a)
             y = CY + RY * math.sin(a)
-            lines.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-opacity="0.22" stroke-width="1"/>' % (CX, CY, x, y, pal["gold"]))
+            lines.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-opacity="0.30" stroke-width="1"/>' % (CX, CY, x, y, pal["gold"]))
+            lines.append('<circle cx="%.1f" cy="%.1f" r="1.4" fill="%s" opacity="0.8"/>' % (x, y, pal["gold"]))
         for i in range(n):
             a1 = -math.pi / 2 + i * 2 * math.pi / n
             a2 = -math.pi / 2 + ((i + 1) % n) * 2 * math.pi / n
@@ -113,12 +115,15 @@ def main():
             nodes.append(node(x, y, th.lang_color(lang), lang, cnt, pal, (ox, oy)))
 
         center = (
-            '<circle cx="%d" cy="%d" r="16" fill="%s" opacity="0.20"/>'
-            '<circle cx="%d" cy="%d" r="9" fill="%s" opacity="0.30"/>'
+            '<ellipse cx="%d" cy="%d" rx="38" ry="15" fill="none" stroke="%s" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="2 5"/>'
+            '<circle cx="%d" cy="%d" r="2.2" fill="%s" opacity="0.9"/>'
+            '<circle cx="%d" cy="%d" r="18" fill="%s" opacity="0.18"/>'
+            '<circle cx="%d" cy="%d" r="10" fill="%s" opacity="0.28"/>'
             '%s'
-            '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="13" font-weight="700" fill="%s">%s</text>'
-            '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="9.5" fill="%s">主语言</text>'
-            % (CX, CY, pal["gold"], CX, CY, pal["gold"], star5(CX, CY, 12, pal["gold_bright"]),
+            '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="13" font-weight="700" letter-spacing="1" fill="%s">%s</text>'
+            '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="9" letter-spacing="2" fill="%s">主语言</text>'
+            % (CX, CY, pal["gold"], CX + 34, CY - 4, pal["gold_bright"],
+               CX, CY, pal["gold"], CX, CY, pal["gold"], star5(CX, CY, 13, pal["gold_bright"]),
                CX, CY + 40, th.FONT, pal["text"], th.esc(primary),
                CX, CY + 53, th.FONT, pal["muted"])
         )
@@ -126,20 +131,26 @@ def main():
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="Tech Stack — %s">'
             '%s'
-            '<text x="30" y="40" font-family="%s" font-size="15" font-weight="700" letter-spacing="2.5" fill="%s">TECH STACK</text>'
-            '<text x="610" y="40" text-anchor="end" font-family="%s" font-size="11" fill="%s">更新于 %s</text>'
-            '<text x="30" y="64" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
-            '<line x1="30" y1="80" x2="610" y2="80" stroke="%s" stroke-width="1"/>'
+            '<path d="M26 40 l4 -5 l4 5 l-4 5 z" fill="%s" opacity="0.95"/>'
+            '<text x="40" y="44" font-family="%s" font-size="14.5" font-weight="700" letter-spacing="3" fill="%s">TECH STACK</text>'
+            '<text x="610" y="44" text-anchor="end" font-family="%s" font-size="10.5" letter-spacing="1" fill="%s">更新于 %s</text>'
+            '<text x="40" y="70" font-family="%s" font-size="17" font-weight="600" fill="%s">%s</text>'
+            '<text x="610" y="70" text-anchor="end" font-family="%s" font-size="11" letter-spacing="1" fill="%s">GitHub · 仓库主语言</text>'
+            '<line x1="40" y1="84" x2="600" y2="84" stroke="%s" stroke-width="1"/>'
+            '<line x1="286" y1="83" x2="354" y2="83" stroke="%s" stroke-width="1.4" opacity="0.8"/>'
+            '<path d="M320 80 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
             '%s%s%s'
             '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub API · 按仓库主语言统计 · 每日自动刷新 · 零服务器</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
                 th.card_bg(pal, W, H),
+                pal["gold"],
                 th.FONT, pal["gold_bright"],
                 th.FONT, pal["sub"], date,
                 th.FONT, pal["text"], th.esc(USER),
-                pal["line"],
+                th.FONT, pal["sub"],
+                pal["line"], pal["gold"], pal["gold"],
                 "".join(lines), center, "".join(nodes),
                 H - 18, th.FONT, pal["dim"],
             )

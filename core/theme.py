@@ -4,34 +4,55 @@
 Two full palettes: "dark" (deep-blue + gold brand, default) and "light"
 (paper-white + deep gold, for profiles on light themes). Every component
 reads `theme` input -> THEME env -> th.palette(THEME).
+
+Premium finish layer (anti-AI-flat):
+  - 3-stop sky gradient (deep space, not one flat wash)
+  - gold nebula (top-right) + blue nebula (bottom-left) radial glows
+  - micro-grain dots (film texture instead of sterile vector flatness)
+  - a few 4-ray sparkles among the starfield
+  - thin gold corner ticks framing the card
+  - gradient number fills for hero figures
 """
 
+import random
 import xml.sax.saxutils as sax
 
 FONT = "'Segoe UI',Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif"
+FONT_CN = "'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif"
 
 # --------------------------------------------------------------------------
 # brand palettes
 # --------------------------------------------------------------------------
 PALETTES = {
     "dark": {
-        "bg_top": "#0B1026",
-        "bg_bottom": "#131D38",
-        "line": "#243356",
+        "bg_top": "#070B1E",
+        "bg_mid": "#0B1026",
+        "bg_bottom": "#141C36",
+        "line": "#2A3A6B",
+        "line_soft": "#1D2A52",
         "text": "#F5F0E6",
         "muted": "#9AA3B5",
         "dim": "#6E7893",
         "gold": "#C9A86A",
         "gold_bright": "#E4C87F",
-        "sub": "#7C87A3",        # small header meta text
-        "star": "#F5F0E6",       # starfield dots
+        "sub": "#7C87A3",
+        "star": "#F5F0E6",
         "star_op": 0.35,
-        "row_sub": "#D5DAE4",    # secondary row text (impact-card)
+        "row_sub": "#D5DAE4",
+        "panel": "#0E1530",
+        "panel_top": "#16204A",
+        "nebula": "#2B4B9E",
+        "neb_op_g": 0.16,
+        "neb_op_b": 0.22,
+        "glow_op": 0.10,
+        "grain": "#FFFFFF",
     },
     "light": {
         "bg_top": "#FFFFFF",
+        "bg_mid": "#FBF9F4",
         "bg_bottom": "#F4F1EA",
-        "line": "#E2DCCF",
+        "line": "#E5DFD2",
+        "line_soft": "#EDE7DA",
         "text": "#16213E",
         "muted": "#5F6B7F",
         "dim": "#8A93A6",
@@ -41,6 +62,13 @@ PALETTES = {
         "star": "#C9A86A",
         "star_op": 0.16,
         "row_sub": "#3C4858",
+        "panel": "#FFFFFF",
+        "panel_top": "#FDFCF8",
+        "nebula": "#DCCBA8",
+        "neb_op_g": 0.14,
+        "neb_op_b": 0.20,
+        "glow_op": 0.06,
+        "grain": "#8F6F2C",
     },
 }
 
@@ -92,38 +120,115 @@ STARS = [
     (422, 394, 1.1), (477, 382, 1.2), (532, 396, 1.0), (587, 384, 1.3),
 ]
 
+# a few 4-ray sparkles scattered among the dots
+SPARKLES = [
+    (86, 46, 5), (238, 150, 4), (404, 62, 6), (556, 196, 4), (120, 300, 5),
+    (492, 330, 4), (316, 52, 4), (66, 240, 4),
+]
+
+
+def sparkle(cx, cy, r, color, op=0.55):
+    """4-ray twinkle (two crossed lines, round caps) + centre dot."""
+    return (
+        '<path d="M%.1f %.1f H%.1f M%.1f %.1f V%.1f" stroke="%s" stroke-width="1" '
+        'stroke-linecap="round" opacity="%s"/>'
+        '<circle cx="%.1f" cy="%.1f" r="1.1" fill="%s" opacity="%s"/>'
+        % (cx - r, cy, cx + r, cx, cy - r, cy + r, color, op, cx, cy, color, op)
+    )
+
+
+def microdots(w, h, pal):
+    """Film-grain dots: ~72 sub-pixel specks, very low opacity."""
+    rnd = random.Random(20260924)
+    out = []
+    for _ in range(72):
+        x = rnd.uniform(6, w - 6)
+        y = rnd.uniform(6, h - 6)
+        r = rnd.choice([0.4, 0.5, 0.6])
+        op = rnd.uniform(0.035, 0.085)
+        out.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s" opacity="%.3f"/>' % (x, y, r, pal["grain"], op))
+    return "".join(out)
+
+
+def corner_marks(w, h, pal, ln=11):
+    """Four thin gold L-shaped corner ticks — the 'framed print' detail."""
+    g = pal["gold"]
+    return (
+        '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
+        '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
+        '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
+        '<path d="M%.1f %.1f h%d M%.1f %.1f v%d" fill="none" stroke="%s" stroke-width="1" opacity="0.6"/>'
+        % (
+            10.5, 10.5, ln, 10.5, 10.5, ln, g,
+            w - 10.5 - ln, 10.5, ln, w - 10.5, 10.5, ln, g,
+            10.5, h - 10.5 - ln, ln, 10.5, h - 10.5, ln, g,
+            w - 10.5 - ln, h - 10.5 - ln, ln, w - 10.5, h - 10.5, ln, g,
+        )
+    )
+
 
 def starfield(pal, w, h):
-    """Star-dot field sized to (w, h), in palette color."""
+    """Star-dot field + a few sparkles, sized to (w, h)."""
     dots = []
     for x, y, r in STARS:
         if x < w - 4 and y < h - 4:
             dots.append('<circle cx="%d" cy="%d" r="%g" fill="%s" opacity="%s"/>' % (x, y, r, pal["star"], pal["star_op"]))
+    for x, y, r in SPARKLES:
+        if x < w - 6 and y < h - 6:
+            dots.append(sparkle(x, y, r, pal["star"], 0.5))
     return "".join(dots)
 
 
+def num_gradient(pal, uid="1"):
+    """Gold gradient for hero numbers / titles."""
+    return (
+        '<linearGradient id="gt%s" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/>'
+        '</linearGradient>' % (uid, pal["gold_bright"], pal["gold"])
+    )
+
+
 def card_bg(pal, w, h):
-    """Full background: vertical gradient + starfield + subtle inner glow."""
+    """Full background: 3-stop sky + gold/blue nebulas + starfield + grain
+    + hairline frame + gold corner ticks.  id="bg"/"glow" stay stable so
+    existing components that reference url(#glow) keep working."""
     return (
         '<defs>'
         '<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">'
-        '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/>'
+        '<stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/>'
+        '<stop offset="1" stop-color="%s"/>'
         '</linearGradient>'
-        '<radialGradient id="glow" cx="0.5" cy="0.5" r="0.75">'
-        '<stop offset="0" stop-color="%s" stop-opacity="0.16"/>'
+        '<radialGradient id="nebG" cx="0.84" cy="0.10" r="0.62">'
+        '<stop offset="0" stop-color="%s" stop-opacity="%s"/>'
+        '<stop offset="1" stop-color="%s" stop-opacity="0"/>'
+        '</radialGradient>'
+        '<radialGradient id="nebB" cx="0.10" cy="0.92" r="0.60">'
+        '<stop offset="0" stop-color="%s" stop-opacity="%s"/>'
+        '<stop offset="1" stop-color="%s" stop-opacity="0"/>'
+        '</radialGradient>'
+        '<radialGradient id="glow" cx="0.5" cy="0.42" r="0.72">'
+        '<stop offset="0" stop-color="%s" stop-opacity="%s"/>'
         '<stop offset="1" stop-color="%s" stop-opacity="0"/>'
         '</radialGradient>'
         '</defs>'
         '<rect width="%d" height="%d" fill="url(#bg)"/>'
+        '<rect width="%d" height="%d" fill="url(#nebG)"/>'
+        '<rect width="%d" height="%d" fill="url(#nebB)"/>'
         '<rect width="%d" height="%d" fill="url(#glow)"/>'
         '%s'
+        '%s'
         '<rect x="0.5" y="0.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="1"/>'
+        '%s'
         % (
-            pal["bg_top"], pal["bg_bottom"],
-            pal["gold"], pal["gold_top"] if "gold_top" in pal else pal["bg_top"],
-            w, h, w, h,
+            pal["bg_top"], pal.get("bg_mid", pal["bg_top"]), pal["bg_bottom"],
+            pal["gold"], pal.get("neb_op_g", 0.16), pal["bg_top"],
+            pal.get("nebula", "#2B4B9E"), pal.get("neb_op_b", 0.22), pal["bg_top"],
+            pal["gold"], pal.get("glow_op", 0.10), pal["bg_top"],
+            w, h, w, h, w, h, w, h,
             starfield(pal, w, h),
+            microdots(w, h, pal),
             w - 1, h - 1, pal["line"],
+            corner_marks(w, h, pal),
         )
     )
 
