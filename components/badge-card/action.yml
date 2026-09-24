@@ -1,0 +1,44 @@
+name: "Badge Card"
+description: >-
+  [Profile Verse] A row of gold medal-style badges (gradient gold border + star
+  icon) that replace the flat shields.io strip. Auto-computed from GitHub, or
+  fully custom via the badges input. Zero server.
+author: "Morningstar202604"
+branding:
+  icon: "award"
+  color: "yellow"
+
+inputs:
+  user:
+    description: "GitHub username (used in auto mode)"
+    required: false
+    default: "Morningstar202604"
+  badges:
+    description: 'Custom badges, semicolon-separated "label=value;label=value". Empty = auto mode'
+    required: false
+    default: ""
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "badge-card.svg"
+  token:
+    description: "GitHub token (defaults to the workflow's github.token)"
+    required: false
+    default: "${{ github.token }}"
+  theme:
+    description: "Color theme: dark (deep blue) or light (paper white)"
+    required: false
+    default: "dark"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate badge card"
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        USER: ${{ inputs.user }}
+        BADGES: ${{ inputs.badges }}
+        OUTPUT: ${{ inputs.output }}
+        THEME: ${{ inputs.theme }}
+      run: python3 "${{ github.action_path }}/generate_badge_card.py"

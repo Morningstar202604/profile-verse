@@ -138,3 +138,18 @@ TIERS = [
     ("C", 100, "\u2265100\u2605", "#B48AE8", "#C3A6EF"),
     ("D", 0, "<100\u2605", "#6E7893", "#B9C0CE"),
 ]
+
+# GitHub-style language colors for tech-stack-card
+LANGUAGE_COLORS = {
+    "Python": "#3572A5", "TypeScript": "#3178C6", "JavaScript": "#F1E05A",
+    "HTML": "#E34C26", "CSS": "#563D7C", "SCSS": "#C6538C", "Vue": "#41B883",
+    "Java": "#B07219", "C": "#555555", "C++": "#F34B7D", "C#": "#178600",
+    "Go": "#00ADD8", "Rust": "#DEA584", "Shell": "#89E051", "Markdown": "#083FA1",
+    "Jupyter Notebook": "#DA5B0B", "PHP": "#4F5D95", "Ruby": "#701516",
+    "Swift": "#F05138", "Kotlin": "#A97BFF", "Dart": "#00B4AB",
+    "Dockerfile": "#384D54", "Makefile": "#427819", "Other": "#8B949E",
+}
+
+
+def lang_color(lang):
+    return LANGUAGE_COLORS.get(lang, LANGUAGE_COLORS["Other"])

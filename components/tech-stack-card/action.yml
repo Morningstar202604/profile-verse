@@ -1,0 +1,43 @@
+name: "Tech Stack Card"
+description: >-
+  [Profile Verse] Your languages drawn as a constellation: primary language as
+  the bright centre star, others orbiting with constellation lines. Real data
+  from GitHub API. Zero server, pure stdlib SVG.
+author: "Morningstar202604"
+branding:
+  icon: "pulse"
+  color: "yellow"
+
+inputs:
+  user:
+    description: "GitHub username"
+    required: true
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "tech-stack-card.svg"
+  token:
+    description: "GitHub token (defaults to the workflow's github.token)"
+    required: false
+    default: "${{ github.token }}"
+  max_nodes:
+    description: "Max languages shown as orbit nodes (besides the centre star)"
+    required: false
+    default: "6"
+  theme:
+    description: "Color theme: dark (deep blue) or light (paper white)"
+    required: false
+    default: "dark"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate tech stack card"
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        USER: ${{ inputs.user }}
+        OUTPUT: ${{ inputs.output }}
+        MAX_NODES: ${{ inputs.max_nodes }}
+        THEME: ${{ inputs.theme }}
+      run: python3 "${{ github.action_path }}/generate_tech_stack_card.py"

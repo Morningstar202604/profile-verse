@@ -1,0 +1,37 @@
+name: "Banner Card"
+description: >-
+  [Profile Verse] A wide hero banner: your name glowing in gold over a starfield
+  with a comet trail. Pure visual, no API needed. Zero server.
+author: "Morningstar202604"
+branding:
+  icon: "image"
+  color: "yellow"
+
+inputs:
+  user:
+    description: "GitHub username (shown as the glowing name)"
+    required: true
+  text:
+    description: "Subtitle slogan under the name"
+    required: false
+    default: "Code under the stars, ship with the dawn"
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "banner-card.svg"
+  theme:
+    description: "Color theme: dark (deep blue) or light (paper white)"
+    required: false
+    default: "dark"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate banner card"
+      shell: bash
+      env:
+        USER: ${{ inputs.user }}
+        TEXT: ${{ inputs.text }}
+        OUTPUT: ${{ inputs.output }}
+        THEME: ${{ inputs.theme }}
+      run: python3 "${{ github.action_path }}/generate_banner_card.py"

@@ -17,6 +17,12 @@
 
 ![Contribution Grid Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/contrib-grid-card/preview/contrib-grid-card.svg)
 
+![Tech Stack Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/tech-stack-card/preview/tech-stack-card.svg)
+
+![Banner Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/banner-card/preview/banner-card.svg)
+
+![Badge Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/badge-card/preview/badge-card.svg)
+
 > 每张卡都有 **`dark`（深蓝星空）与 `light`（米白纸面）双主题**，加一行 `theme: light` 即可切换，浅色主页也能用。
 
 ## 为什么用 Profile Verse
@@ -36,11 +42,11 @@
 | [streak-card](components/streak-card/) | 连续贡献卡 · 星轨环中央亮星 | 已发布 | `uses: .../components/streak-card@v1` |
 | [typing-card](components/typing-card/) | 标语横幅 · 星空打字机 + 金色光标 | 已发布 | `uses: .../components/typing-card@v1` |
 | [contrib-grid-card](components/contrib-grid-card/) | 3D 等距贡献柱 · 替换第三方 3D Action | 已发布 | `uses: .../components/contrib-grid-card@v1` |
-| tech-stack-card | 技术栈星座图 | 规划中 | — |
-| banner-card | 星空头图 / 尾图 | 规划中 | — |
-| badge-card | 金色徽章 | 规划中 | — |
+| [tech-stack-card](components/tech-stack-card/) | 技术栈星座图 · 主语言是中央亮星 | 已发布 | `uses: .../components/tech-stack-card@v1` |
+| [banner-card](components/banner-card/) | 星空全景头图 · 发光名字 + 流星 | 已发布 | `uses: .../components/banner-card@v1` |
+| [badge-card](components/badge-card/) | 金色奖章徽章 · 替代 shields 平铺条 | 已发布 | `uses: .../components/badge-card@v1` |
 
-> 主页替换进度：P1（替换外部服务）已完成——typing / streak / stats 均可替换原外部组件；P2（替换第三方 Action 的 3D 贡献图）已完成——contrib-grid-card 上线。
+> 主页替换进度：P1（外部服务）已替换——typing / streak / stats；P2（第三方 3D Action）已替换——contrib-grid-card；P3（自研资产沉淀）已完成——tech-stack / banner / badge。唯一保留的第三方项：浏览量计数（纯静态做不了实时计数）。
 
 ## 快速开始（以 impact-card 为例）
 
@@ -65,7 +71,7 @@ README 里一行引用：
 
 ## 设计规范（差异化 + 不拥挤原则）
 
-- **一眼特征**：每张卡一个独特形态（星轨 / 星环 / 打字机 / 3D 等距柱），不做撞脸方案
+- **一眼特征**：每张卡一个独特形态（星轨 / 星环 / 打字机 / 3D 等距柱 / 星座 / 流星横幅 / 奖章），不做撞脸方案
 - 单卡单主题，640 宽横版，大数字 + 少文字，留白优先
 - 品牌色：深蓝 `#0B1026` + 金 `#C9A86A` + 星空点；**双主题**（`dark` / `light`）在 `core/theme.py` 一处维护
 - 数据真实：统一走 `core/github.py`，全部卡每日自动刷新，卡片标注数据来源与更新时间
@@ -80,7 +86,10 @@ profile-verse/
 │   ├── stats-card/
 │   ├── streak-card/
 │   ├── typing-card/
-│   └── contrib-grid-card/
+│   ├── contrib-grid-card/
+│   ├── tech-stack-card/
+│   ├── banner-card/
+│   └── badge-card/
 ├── .github/workflows/        本仓库自刷新示例
 └── README.md                 组件目录页
 ```

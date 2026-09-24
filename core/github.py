@@ -128,6 +128,25 @@ def fetch_total_stars(user):
     return total
 
 
+def fetch_repos(user):
+    """All public repos of `user` as [{name, language, stars}]. Paginated."""
+    repos, page = [], 1
+    while True:
+        data = api("/users/%s/repos" % user, {"per_page": 100, "page": page, "sort": "created"})
+        if not data:
+            break
+        for r in data:
+            repos.append({
+                "name": r.get("name", ""),
+                "language": (r.get("language") or "Other").strip() or "Other",
+                "stars": int(r.get("stargazers_count", 0)),
+            })
+        if len(data) < 100:
+            break
+        page += 1
+    return repos
+
+
 def fetch_contribution_calendar(user):
     """Full-year contribution calendar via GraphQL.
 

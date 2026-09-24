@@ -48,6 +48,24 @@ jobs:
           user: Morningstar202604
           output: components/contrib-grid-card/preview/contrib-grid-card.svg
 
+      - name: Tech stack card
+        uses: ./components/tech-stack-card
+        with:
+          user: Morningstar202604
+          output: components/tech-stack-card/preview/tech-stack-card.svg
+
+      - name: Banner card
+        uses: ./components/banner-card
+        with:
+          user: Morningstar202604
+          output: components/banner-card/preview/banner-card.svg
+
+      - name: Badge card
+        uses: ./components/badge-card
+        with:
+          user: Morningstar202604
+          output: components/badge-card/preview/badge-card.svg
+
       - name: Commit & push
         run: |
           git config user.name "github-actions[bot]"
