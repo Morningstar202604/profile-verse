@@ -1,0 +1,43 @@
+name: "GitHub Impact Card"
+description: >-
+  Generate a beautiful SVG card of your merged pull requests, weighted by the
+  star count of the repositories you contributed to. Zero-server: run on a
+  schedule, commit the SVG, reference it anywhere.
+author: "Morningstar202604"
+branding:
+  icon: "award"
+  color: "yellow"
+
+inputs:
+  users:
+    description: "GitHub username(s); comma-separated to aggregate multiple accounts"
+    required: true
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "impact-card.svg"
+  token:
+    description: "GitHub token (defaults to the workflow's github.token)"
+    required: false
+    default: "${{ github.token }}"
+  max_prs:
+    description: "Max merged PRs to scan per user"
+    required: false
+    default: "300"
+  max_top:
+    description: "Max top repositories shown on the card"
+    required: false
+    default: "5"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate impact card"
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        USERS: ${{ inputs.users }}
+        OUTPUT: ${{ inputs.output }}
+        MAX_PR: ${{ inputs.max_prs }}
+        MAX_TOP: ${{ inputs.max_top }}
+      run: python3 "${{ github.action_path }}/generate_impact_card.py"
