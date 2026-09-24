@@ -1,0 +1,22 @@
+name: Stargazer Wall
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"   # every Monday 02:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  wall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render & publish the stargazer wall
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 .github/star-wall/star_wall.py

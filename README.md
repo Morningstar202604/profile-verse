@@ -215,6 +215,10 @@ An isometric golden contribution grid (light top / mid side / dark side), five g
     output: contrib-grid-card.svg
 ```
 
+> 🌱 **Standalone release**: this card also ships alone as
+> [**Morningstar202604/contrib-grid-card**](https://github.com/Morningstar202604/contrib-grid-card)
+> — `uses: Morningstar202604/contrib-grid-card@v1`, no need for the full family.
+
 ### 6 · tech-stack-card — Tech constellation
 Your main language is the central star; others orbit on golden ellipses and connect into a constellation. Built from your real repo languages.
 
@@ -295,6 +299,16 @@ profile-verse/
 ├── .github/workflows/        daily preview refresh for this repo
 └── README.md                 component catalog
 ```
+
+## 🌱 Standalone releases
+
+Any card can be split out of the monorepo with one command
+(`git subtree split --prefix=components/<name>`) and pushed as its own repo —
+each repo keeps the full history and gets `@v1`-style references. Done for:
+[`contrib-grid-card`](https://github.com/Morningstar202604/contrib-grid-card).
+
+A weekly **Stargazer Wall** issue thanks every new star automatically
+(`.github/workflows/star-wall.yml`) — watch [issues](https://github.com/Morningstar202604/profile-verse/issues).
 
 ## 🤝 Contributing
 

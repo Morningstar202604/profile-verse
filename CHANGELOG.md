@@ -4,6 +4,15 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [Unreleased]
+
+### Added
+- **Stargazer Wall** (`.github/workflows/star-wall.yml`) — a weekly issue that
+  thanks every new star; stateless, API-driven, idempotent.
+- **Standalone split** — `contrib-grid-card` extracted via `git subtree split`
+  into [Morningstar202604/contrib-grid-card](https://github.com/Morningstar202604/contrib-grid-card)
+  (own history, `@v1` refs, own topics). Pattern documented in README.
+
 ## [1.2.0] - 2026-09-24
 
 ### Added
