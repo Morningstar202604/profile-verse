@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -25,11 +25,25 @@ jobs:
           users: Morningstar202604
           output: components/impact-card/preview/impact-card.svg
 
+      - name: Impact card (light)
+        uses: ./components/impact-card
+        with:
+          users: Morningstar202604
+          theme: light
+          output: components/impact-card/preview/impact-card-light.svg
+
       - name: Stats card
         uses: ./components/stats-card
         with:
           user: Morningstar202604
           output: components/stats-card/preview/stats-card.svg
+
+      - name: Stats card (light)
+        uses: ./components/stats-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/stats-card/preview/stats-card-light.svg
 
       - name: Streak card
         uses: ./components/streak-card
@@ -37,10 +51,23 @@ jobs:
           user: Morningstar202604
           output: components/streak-card/preview/streak-card.svg
 
+      - name: Streak card (light)
+        uses: ./components/streak-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/streak-card/preview/streak-card-light.svg
+
       - name: Typing card
         uses: ./components/typing-card
         with:
           output: components/typing-card/preview/typing-card.svg
+
+      - name: Typing card (light)
+        uses: ./components/typing-card
+        with:
+          theme: light
+          output: components/typing-card/preview/typing-card-light.svg
 
       - name: Contribution grid card (3D)
         uses: ./components/contrib-grid-card
@@ -48,11 +75,25 @@ jobs:
           user: Morningstar202604
           output: components/contrib-grid-card/preview/contrib-grid-card.svg
 
+      - name: Contribution grid card (3D, light)
+        uses: ./components/contrib-grid-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/contrib-grid-card/preview/contrib-grid-card-light.svg
+
       - name: Tech stack card
         uses: ./components/tech-stack-card
         with:
           user: Morningstar202604
           output: components/tech-stack-card/preview/tech-stack-card.svg
+
+      - name: Tech stack card (light)
+        uses: ./components/tech-stack-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/tech-stack-card/preview/tech-stack-card-light.svg
 
       - name: Banner card
         uses: ./components/banner-card
@@ -60,11 +101,38 @@ jobs:
           user: Morningstar202604
           output: components/banner-card/preview/banner-card.svg
 
+      - name: Banner card (light)
+        uses: ./components/banner-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/banner-card/preview/banner-card-light.svg
+
       - name: Badge card
         uses: ./components/badge-card
         with:
           user: Morningstar202604
           output: components/badge-card/preview/badge-card.svg
+
+      - name: Badge card (light)
+        uses: ./components/badge-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/badge-card/preview/badge-card-light.svg
+
+      - name: Year review card
+        uses: ./components/year-review-card
+        with:
+          user: Morningstar202604
+          output: components/year-review-card/preview/year-review-card.svg
+
+      - name: Year review card (light)
+        uses: ./components/year-review-card
+        with:
+          user: Morningstar202604
+          theme: light
+          output: components/year-review-card/preview/year-review-card-light.svg
 
       - name: Commit & push
         run: |

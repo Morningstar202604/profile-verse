@@ -23,7 +23,7 @@ FONT_CN = "'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif"
 # Semantic version of the design system & component suite.
 # Release flow: bump here -> bump the "· vX.Y.Z" footer literal in every
 # component generator -> regenerate all previews -> tag vX.Y.Z + move vX.
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 # --------------------------------------------------------------------------
 # brand palettes

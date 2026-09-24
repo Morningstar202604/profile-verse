@@ -87,6 +87,13 @@ jobs:
           output: assets/profile-verse/impact-card.svg
           theme: ${{ inputs.theme }}
 
+      - name: Year review (annual ring)
+        uses: Morningstar202604/profile-verse/components/year-review-card@v1
+        with:
+          user: your-github-username
+          output: assets/profile-verse/year-review-card.svg
+          theme: ${{ inputs.theme }}
+
       - name: Commit & push
         run: |
           git config user.name "github-actions[bot]"

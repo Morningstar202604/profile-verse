@@ -4,6 +4,17 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [1.2.0] - 2026-09-24
+
+### Added
+- **year-review-card** — the 9th component: a golden annual ring (12 month-stars
+  sized/brightened by real monthly contributions, halo on the peak month), the
+  year's total glowing at the center, and four star-medals (peak month / longest
+  streak / merged PRs / top language). Data from the 365-day contribution
+  calendar + merged PRs + repo languages.
+- Showcase walls rebuilt to 9 cards (dark + light).
+- update.yml now refreshes **all 18 previews** (9 cards × dark/light) daily.
+
 ## [1.1.0] - 2026-09-24
 
 ### Added
@@ -37,5 +48,6 @@ First stable release of the monorepo suite.
 - `git subtree split`-ready monorepo layout ("先合后拆").
 - Live demo on [Morningstar202604 homepage](https://github.com/Morningstar202604/Morningstar202604).
 
+[1.2.0]: https://github.com/Morningstar202604/profile-verse/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Morningstar202604/profile-verse/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Morningstar202604/profile-verse/releases/tag/v1.0.0

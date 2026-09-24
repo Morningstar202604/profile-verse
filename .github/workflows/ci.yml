@@ -23,7 +23,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          for c in impact-card stats-card streak-card typing-card contrib-grid-card tech-stack-card banner-card badge-card; do
+          for c in impact-card stats-card streak-card typing-card contrib-grid-card tech-stack-card banner-card badge-card year-review-card; do
             gen="components/$c/generate_$(echo $c | tr '-' '_').py"
             for theme in dark light; do
               out="components/$c/preview/$c.svg"

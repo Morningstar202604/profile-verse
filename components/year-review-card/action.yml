@@ -1,0 +1,37 @@
+name: Year Review Card
+description: >-
+  A golden annual ring — 12 months orbit the ring, the year's contribution
+  total glows in the center, and four star-medals summarise the year.
+  Real data from the GitHub contribution calendar (last 365 days) + merged PRs
+  + repo languages. Zero server: a GitHub Action renders the SVG for you.
+
+inputs:
+  user:
+    description: GitHub username
+    required: true
+  output:
+    description: Output SVG path
+    required: false
+    default: year-review-card.svg
+  theme:
+    description: dark or light
+    required: false
+    default: dark
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Generate year-review card
+      env:
+        GH_TOKEN: ${{ github.token }}
+        USER: ${{ inputs.user }}
+        THEME: ${{ inputs.theme }}
+        OUTPUT: ${{ inputs.output }}
+      run: python "${{ github.action_path }}/generate_year_review_card.py"
+      shell: bash

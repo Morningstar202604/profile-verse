@@ -146,7 +146,7 @@ jobs:
 
 搞定。没有服务器、没有成本、每天自动刷新。
 
-## 🗂 组件展示厅 · 8 卡 × 双主题
+## 🗂 组件展示厅 · 9 卡 × 双主题
 
 每张卡都有 **`dark`（星夜）与 `light`（纸面）** 两个主题。
 
@@ -255,6 +255,19 @@ jobs:
     # badges: "PRs=12;Stars=256.9k;Repos=19"   # 可选：完全自定义
 ```
 
+### 9 · year-review-card — 年度回顾星轮
+一年 12 个月绕成一枚金色年轮：星越大越亮代表当月贡献越多，最活跃月带光晕；轮心是近一年贡献总数，右侧四枚年度星章（最活跃月 / 最长连续 / 合并 PR / 主力语言）。数据来自真实贡献日历。
+
+![Year dark](components/year-review-card/preview/year-review-card.svg)
+![Year light](components/year-review-card/preview/year-review-card-light.svg)
+
+```yaml
+- uses: Morningstar202604/profile-verse/components/year-review-card@v1
+  with:
+    user: 你的用户名
+    output: year-review-card.svg
+```
+
 ## 🎨 设计规范（差异化 + 不拥挤）
 
 - **一眼特征**：每张卡一个独特形态（星轨 / 表盘 / 打字机 / 3D 等距柱 / 星座 / 流星横幅 / 奖章），不做撞脸方案，不做贪吃蛇
@@ -275,6 +288,7 @@ profile-verse/
 │   ├── typing-card/
 │   ├── contrib-grid-card/
 │   ├── tech-stack-card/
+│   ├── year-review-card/
 │   ├── banner-card/
 │   └── badge-card/
 ├── examples/                 复制即用的 workflow

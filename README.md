@@ -146,7 +146,7 @@ Then reference the cards in your `README.md` — use a `<picture>` block so the 
 
 That's it. No server, no cost, refreshed daily.
 
-## 🗂 Component gallery — 8 cards × 2 themes
+## 🗂 Component gallery — 9 cards × 2 themes
 
 Every card has a **dark** (starry night) and **light** (paper) version.
 
@@ -255,6 +255,19 @@ A row of golden medal badges (gradient edge + star icon) instead of flat shields
     # badges: "PRs=12;Stars=256.9k;Repos=19"   # optional: fully custom
 ```
 
+### 9 · year-review-card — Annual ring
+Twelve months orbit a golden ring — the bigger and brighter the star, the more you contributed that month. Your year's total glows at the center, with four star-medals: peak month / longest streak / merged PRs / top language. Real 365-day contribution data.
+
+![Year dark](components/year-review-card/preview/year-review-card.svg)
+![Year light](components/year-review-card/preview/year-review-card-light.svg)
+
+```yaml
+- uses: Morningstar202604/profile-verse/components/year-review-card@v1
+  with:
+    user: your-github-username
+    output: year-review-card.svg
+```
+
 ## 🎨 Design system
 
 - **One glance, one signature**: each card has one distinctive shape — star orbit / dial ring / typewriter / isometric 3D / constellation / comet banner / medals. No clone cards, no snake.
@@ -275,6 +288,7 @@ profile-verse/
 │   ├── typing-card/
 │   ├── contrib-grid-card/
 │   ├── tech-stack-card/
+│   ├── year-review-card/
 │   ├── banner-card/
 │   └── badge-card/
 ├── examples/                 copy-paste workflows
