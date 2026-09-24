@@ -1,82 +1,69 @@
-# GitHub Impact Card
+# Profile Verse · 主页宇宙
 
-生成一张展示"已合并 PR × 仓库 star"的贡献影响力卡片（SVG），自动标注你在多大体量的开源项目里被合并过 PR。零服务器、零成本：GitHub Actions 定时生成、提交到仓库、任何人一行 `<img>` 引用。
+把你的 GitHub 主页的每一个部位，都换成一张更好看的卡。
+一个仓库逛完全部组件，零服务器、零成本、每日自动刷新，视觉统一（深蓝 + 金）。
 
-![Impact Card](https://cdn.jsdelivr.net/gh/Morningstar202604/impact-card@main/preview/impact-card.svg)
+![Impact Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/impact-card/preview/impact-card.svg)
 
-## 特性
+## 为什么用 Profile Verse
 
-- 大数字：合并 PR 总数 · 贡献仓库数 · 影响力分（Σ 贡献过仓库的 star）
-- 贡献分档：S ≥50k★ / A ≥10k★ / B ≥1k★ / C ≥100★ / D <100★
-- TOP 贡献仓库榜：仓库名 + star + 合并 PR 数（≥10k★ 金色高亮）
-- 最近合并 PR + 更新时间，每日自动刷新
-- 支持多账号聚合：`users: a,b`
+- **零服务器、零成本**：GitHub Actions 定时生成 SVG，任何人一行 `<img>` 或 `uses:` 即可引用，不花钱、不绑卡
+- **一个入口逛全部**：所有组件收在一个仓库，别人看一次 README 就能挑走想要的卡
+- **视觉统一**：所有卡共用 `core/` 设计系统（品牌色 / 字体 / star 分档 / GitHub API 层）
+- **先合后拆**：组件独立爆红时，用 `git subtree split` 一键拆成独立仓库，引用地址换仓名即可
 
-## 怎么用（别人一键接入）
+## 组件
 
-在你自己的仓库里加一个 workflow（公开仓库 Actions 免费，0 元）：
+| 组件 | 说明 | 状态 | 用法 |
+| --- | --- | --- | --- |
+| [impact-card](components/impact-card/) | 已合并 PR × 仓库 star 影响力卡 | 已发布 | `uses: Morningstar202604/profile-verse/components/impact-card@v1` |
+| typing-card | 打字机标语卡（SVG 内置动画） | 规划中 | — |
+| streak-card | 连续贡献天数卡 | 规划中 | — |
+| stats-card | 星标 / 关注 / 仓库统计卡 | 规划中 | — |
+| tech-stack-card | 技术栈图卡 | 规划中 | — |
+| contrib-grid-card | 贡献热力图卡（替换 3D/蛇形图） | 规划中 | — |
+| banner-card | 主页头图 / 尾图 | 规划中 | — |
+
+> 主页替换路线图与每个部位的做法见仓库讨论区 / 各组件 README。
+
+## 快速开始（以 impact-card 为例）
+
+workflow 里接入（公开仓库 Actions 免费）：
 
 ```yaml
-name: Refresh Impact Card
-
-on:
-  schedule:
-    - cron: "0 1 * * *"
-  workflow_dispatch:
-
-permissions:
-  contents: write
-
-jobs:
-  card:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate impact card
-        uses: Morningstar202604/impact-card@v1
-        with:
-          users: your-github-username
-          output: impact-card.svg
-
-      - name: Commit & push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add impact-card.svg
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh impact card [skip ci]"
-          git push
+- uses: actions/checkout@v4
+- name: Generate impact card
+  uses: Morningstar202604/profile-verse/components/impact-card@v1
+  with:
+    users: your-github-username
+    output: impact-card.svg
 ```
 
-然后任意 README / 网页里一行引用（国内推荐 jsDelivr，自带缓存与国内节点）：
+README 里一行引用：
 
 ```markdown
 ![Impact Card](https://cdn.jsdelivr.net/gh/你的用户名/你的仓库@main/impact-card.svg)
 ```
 
-## 输入参数
+完整用法见 [components/impact-card/README.md](components/impact-card/README.md)。
 
-| 参数 | 必填 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `users` | 是 | — | GitHub 用户名，多账号用逗号分隔，如 `a,b` |
-| `output` | 否 | `impact-card.svg` | 生成的 SVG 路径 |
-| `token` | 否 | `github.token` | 一般不用改；私有数据场景可传带权限的 token |
-| `max_prs` | 否 | `300` | 每个用户最多扫描的已合并 PR 数 |
-| `max_top` | 否 | `5` | 卡片上展示的 TOP 仓库数 |
+## 设计规范（不拥挤原则）
 
-## 工作原理
+- 单卡单主题：一张卡只讲一件事，不做大杂烩
+- 640 宽横版，信息密度低，大数字 + 少文字，留白优先
+- 品牌色：深蓝 `#0B1026` + 金 `#C9A86A`，主题在 `core/theme.py` 一处维护
+- 数据来源统一走 `core/github.py`，全部卡每日自动刷新
 
-1. GitHub Search API 拉取 `is:pr author:<用户> is:merged` 的全部已合并 PR
-2. 按仓库去重后读取每个仓库的 star 数
-3. 按 star 分档（S/A/B/C/D）统计，取 TOP 仓库与最近合并
-4. Python 直接生成 SVG（无第三方依赖，纯标准库）
+## 目录结构
 
-> 说明：star 是"项目影响力"的代理指标，不等于代码质量；按分档展示比单一总分更直观、更难被刷。
-
-## 自用示例（本仓库）
-
-本仓库自身通过 `.github/workflows/update.yml` 每日 01:00 刷新 `preview/impact-card.svg`。
+```
+profile-verse/
+├── core/                     共享核心：GitHub API 层 · star 分档 · 主题
+├── components/
+│   └── impact-card/          组件 = 生成脚本 + SVG 模板 + action.yml + README
+├── .github/workflows/        本仓库自刷新示例
+└── README.md                 组件目录页
+```
 
 ## License
 

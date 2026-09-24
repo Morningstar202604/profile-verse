@@ -1,8 +1,8 @@
 name: "GitHub Impact Card"
 description: >-
-  Generate a beautiful SVG card of your merged pull requests, weighted by the
-  star count of the repositories you contributed to. Zero-server: run on a
-  schedule, commit the SVG, reference it anywhere.
+  [Profile Verse] Generate a beautiful SVG card of your merged pull requests,
+  weighted by the star count of the repositories you contributed to.
+  Zero-server: run on a schedule, commit the SVG, reference it anywhere.
 author: "Morningstar202604"
 branding:
   icon: "award"

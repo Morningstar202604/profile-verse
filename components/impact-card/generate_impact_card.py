@@ -1,153 +1,46 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GitHub Impact Card Generator
-----------------------------
+GitHub Impact Card — Profile Verse component
+--------------------------------------------
 Generates a beautiful SVG card showing a GitHub user's merged pull requests,
 weighted by the star count of the repositories they contributed to.
 
-Zero-server: run it in GitHub Actions on a schedule, commit the generated SVG,
-then reference it from any README via raw.githubusercontent / GitHub Pages /
-jsDelivr CDN. No server, no cost.
+Run:  python3 generate_impact_card.py
+Env:  GH_TOKEN (required) · USERS (default Morningstar202604) · OUTPUT
+      (default impact-card.svg) · MAX_PR (300) · MAX_TOP (5)
 
-Environment variables:
-  GH_TOKEN  GitHub token (recommended; required for paginated merged-PR search)
-  USERS     comma-separated GitHub usernames (default: Morningstar202604)
-  OUTPUT    output SVG path (default: impact-card.svg)
-  MAX_PR    max merged PRs to scan per user (default: 300)
-  MAX_TOP   max top repositories shown on the card (default: 5)
-
-Tier boundaries (repository stars):
-  S >= 50k   A >= 10k   B >= 1k   C >= 100   D < 100
+Part of Profile Verse: https://github.com/Morningstar202604/profile-verse
 """
 
-import json
 import os
 import sys
-import urllib.error
-import urllib.parse
-import urllib.request
-import xml.sax.saxutils as sax
 from collections import Counter
 from datetime import datetime, timezone
 from string import Template
 
-API = "https://api.github.com"
-TOKEN = os.environ.get("GH_TOKEN", "").strip()
-USERS = [u.strip() for u in os.environ.get("USERS", "Morningstar202604").split(",") if u.strip()]
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, _ROOT)
+
+from core import github as gh  # noqa: E402
+from core import theme as th  # noqa: E402
+
 OUTPUT = os.environ.get("OUTPUT", "impact-card.svg")
+USERS = [u.strip() for u in os.environ.get("USERS", "Morningstar202604").split(",") if u.strip()]
 MAX_PR = int(os.environ.get("MAX_PR", "300"))
 MAX_TOP = int(os.environ.get("MAX_TOP", "5"))
 
-TIERS = [
-    ("S", 50000, "\u226550k\u2605", "#C9A86A", "#E4C87F"),
-    ("A", 10000, "\u226510k\u2605", "#5B8DEF", "#8FB4F5"),
-    ("B", 1000, "\u22651k\u2605", "#4EC9A0", "#7ED9B8"),
-    ("C", 100, "\u2265100\u2605", "#B48AE8", "#C3A6EF"),
-    ("D", 0, "<100\u2605", "#6E7893", "#B9C0CE"),
-]
-
-FONT = "'Segoe UI',Helvetica,Arial,'PingFang SC','Microsoft YaHei',sans-serif"
-
-
-def api(path, params=None):
-    url = API + path
-    if params:
-        url += "?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(
-        url,
-        headers={
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "impact-card-generator",
-            "Authorization": "Bearer " + TOKEN,
-        },
-    )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))
-
-
-def fetch_merged_prs(user):
-    """Return merged PRs of `user` as list of dicts."""
-    prs = []
-    query = "is:pr author:%s is:merged" % user
-    page = 1
-    try:
-        while True:
-            data = api("/search/issues", {"q": query, "per_page": 100, "page": page, "sort": "updated", "order": "desc"})
-            items = data.get("items", [])
-            for it in items:
-                merged_at = (it.get("pull_request") or {}).get("merged_at")
-                if not merged_at:
-                    continue
-                repo_url = it.get("repository_url", "")
-                full_name = repo_url.replace(API + "/repos/", "")
-                if not full_name:
-                    continue
-                prs.append({
-                    "repo": full_name,
-                    "number": it.get("number"),
-                    "merged_at": merged_at,
-                    "url": it.get("html_url", ""),
-                })
-            total = data.get("total_count", 0)
-            if not items or page * 100 >= total or len(prs) >= MAX_PR:
-                break
-            page += 1
-    except urllib.error.HTTPError as e:
-        if e.code == 422:  # `is:merged` not supported in this environment
-            return fetch_merged_prs_closed(user)
-        raise
-    return prs[:MAX_PR]
-
-
-def fetch_merged_prs_closed(user):
-    """Fallback: search closed PRs and keep only merged ones."""
-    prs = []
-    query = "is:pr author:%s is:closed" % user
-    page = 1
-    while True:
-        data = api("/search/issues", {"q": query, "per_page": 100, "page": page, "sort": "updated", "order": "desc"})
-        items = data.get("items", [])
-        for it in items:
-            merged_at = (it.get("pull_request") or {}).get("merged_at")
-            if not merged_at:
-                continue
-            repo_url = it.get("repository_url", "")
-            full_name = repo_url.replace(API + "/repos/", "")
-            if not full_name:
-                continue
-            prs.append({"repo": full_name, "number": it.get("number"), "merged_at": merged_at, "url": it.get("html_url", "")})
-        total = data.get("total_count", 0)
-        if not items or page * 100 >= total or len(prs) >= MAX_PR:
-            break
-        page += 1
-    return prs[:MAX_PR]
-
-
-def get_stars(repo):
-    """Return stargazers_count of a repository."""
-    data = api("/repos/" + repo)
-    return int(data.get("stargazers_count", 0))
-
-
-def fmt_stars(n):
-    if n >= 1000:
-        v = n / 1000.0
-        s = ("%.1f" % v).rstrip("0").rstrip(".")
-        return s + "k"
-    return str(n)
-
-
-def esc(text):
-    return sax.escape(str(text))
+FONT = th.FONT
+TIERS = th.TIERS
+esc = th.esc
 
 
 def build_data():
     prs = []
     for user in USERS:
-        prs.extend(fetch_merged_prs(user))
+        prs.extend(gh.fetch_merged_prs(user, MAX_PR))
 
-    # dedupe PRs across accounts by (repo, number)
+    # dedupe across accounts by (repo, number)
     seen, unique = set(), []
     for p in prs:
         key = (p["repo"], p["number"])
@@ -160,23 +53,16 @@ def build_data():
         return None
 
     repo_names = sorted({p["repo"] for p in prs})
-    stars = {}
-    for repo in repo_names:
-        stars[repo] = get_stars(repo)
-
+    stars = {r: gh.get_stars(r) for r in repo_names}
     repo_prs = Counter(p["repo"] for p in prs)
 
-    # tier stats: list of (label, range_text, repo_count, pr_count, color, bright)
     tier_stats = []
     for i, (label, thr, range_text, color, bright) in enumerate(TIERS):
         upper = TIERS[i - 1][1] if i > 0 else float("inf")
         repos_in = [r for r in repo_names if thr <= stars[r] < upper]
-        prs_in = sum(repo_prs[r] for r in repos_in)
-        tier_stats.append((label, range_text, len(repos_in), prs_in, color, bright))
+        tier_stats.append((label, range_text, len(repos_in), sum(repo_prs[r] for r in repos_in), color, bright))
 
     top = sorted(repo_names, key=lambda r: -stars[r])[:MAX_TOP]
-    impact = sum(stars.values())
-    recent = max(prs, key=lambda p: p["merged_at"])
 
     return {
         "prs": prs,
@@ -184,8 +70,8 @@ def build_data():
         "repo_prs": repo_prs,
         "tier_stats": tier_stats,
         "top": top,
-        "impact": impact,
-        "recent": recent,
+        "impact": sum(stars.values()),
+        "recent": max(prs, key=lambda p: p["merged_at"]),
     }
 
 
@@ -210,11 +96,11 @@ def top_rows(top, stars, repo_prs):
     for name in top:
         if len(name) > 42:
             name = name[:41] + "\u2026"
-        star_color = "#E4C87F" if stars[name] >= 10000 else "#D5DAE4"
+        star_color = th.GOLD_BRIGHT if stars[name] >= 10000 else "#D5DAE4"
         out.append(
             '<text x="30" y="%d" font-family="%s" font-size="12.5" fill="#F5F0E6">%s</text>'
             '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="12" font-weight="600" fill="%s">\u2605%s \u00b7 %d PR</text>'
-            % (y, FONT, esc(name), y, FONT, star_color, fmt_stars(stars[name]), repo_prs[name])
+            % (y, FONT, esc(name), y, FONT, star_color, gh.fmt_stars(stars[name]), repo_prs[name])
         )
         y += 26
     return "".join(out), y
@@ -242,7 +128,7 @@ def render(data):
 
     pr_count = len(data["prs"])
     repo_count = len(data["stars"])
-    impact = "\u2248%s\u2605" % fmt_stars(data["impact"])
+    impact = "\u2248%s\u2605" % gh.fmt_stars(data["impact"])
 
     tier_html = tier_boxes(data["tier_stats"])
     top_html, y_after = top_rows(data["top"], data["stars"], data["repo_prs"])
@@ -280,13 +166,13 @@ def render(data):
 
 
 def main():
-    if not TOKEN:
+    if not gh.token():
         sys.stderr.write("error: GH_TOKEN is required (merged-PR search needs auth).\n")
         return 1
     try:
         data = build_data()
         svg = render(data)
-        os.makedirs(os.path.dirname(os.path.abspath(OUTPUT)), exist_ok=True)
+        os.makedirs(os.path.dirname(os.path.abspath(OUTPUT)) or ".", exist_ok=True)
         with open(OUTPUT, "w", encoding="utf-8") as f:
             f.write(svg)
         print("OK: wrote %s (%d bytes, %d merged PRs, %d repos)" % (OUTPUT, len(svg), len(data["prs"]) if data else 0, len(data["stars"]) if data else 0))
