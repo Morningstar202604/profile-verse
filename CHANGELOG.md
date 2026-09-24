@@ -4,6 +4,17 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [1.3.0] - 2026-09-24
+
+### Added
+- **Two new themes**: `rose` (Rose Gold — warm ivory × rosy gilding) and
+  `ocean` (Deep Sea — navy-teal × moonlight silver-blue), alongside `dark`
+  (Midnight) and `light` (Ivory). One `theme:` input on every card.
+- **Postcard letterpress edges**: every card now carries hairline edge
+  marquees (top/bottom) and vertical monograms (left/right) —
+  `PROFILE VERSE ✦ ZERO SERVER ✦ …` — like printed stationery.
+- All 9 component action.yml `theme` descriptions updated to the four themes.
+
 ## [Unreleased]
 
 ### Added
@@ -57,6 +68,7 @@ First stable release of the monorepo suite.
 - `git subtree split`-ready monorepo layout ("先合后拆").
 - Live demo on [Morningstar202604 homepage](https://github.com/Morningstar202604/Morningstar202604).
 
+[1.3.0]: https://github.com/Morningstar202604/profile-verse/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Morningstar202604/profile-verse/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Morningstar202604/profile-verse/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Morningstar202604/profile-verse/releases/tag/v1.0.0

@@ -276,7 +276,16 @@ Twelve months orbit a golden ring — the bigger and brighter the star, the more
 
 - **One glance, one signature**: each card has one distinctive shape — star orbit / dial ring / typewriter / isometric 3D / constellation / comet banner / medals. No clone cards, no snake.
 - **Starry night × gilded gold**: deep navy gradient sky + gold only on data (numbers, anchors, medals), muted gray-blue for body text — the numbers shine, not the decoration.
-- **Dual theme in one place**: all palettes live in `core/theme.py` — dark (night sky) and light (paper).
+- **Four themes, one input**: all palettes live in `core/theme.py` — `dark` (Midnight, default), `light` (Ivory), `rose` (Rose Gold), `ocean` (Deep Sea).
+
+| Theme | Name | Mood |
+| --- | --- | --- |
+| `dark` | Midnight | starry deep blue × gilded gold (default) |
+| `light` | Ivory | paper white × embossed gold |
+| `rose` | Rose Gold | warm ivory × rosy gilding |
+| `ocean` | Deep Sea | cold navy-teal × moonlight silver-blue |
+
+- **Postcard finishing**: every card carries a quiet letterpress edge signature — hairline marquees along the top/bottom and vertical monograms on the sides (`PROFILE VERSE ✦ ZERO SERVER ✦ …`), like printed stationery.
 - **Real data**: everything goes through `core/github.py` — GitHub API / contribution calendar / star tiers. Cards are refreshed daily and stamp source + timestamp.
 - **Room to breathe**: 640px-wide cards, big numbers, few words.
 

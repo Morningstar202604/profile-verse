@@ -23,7 +23,7 @@ FONT_CN = "'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif"
 # Semantic version of the design system & component suite.
 # Release flow: bump here -> bump the "· vX.Y.Z" footer literal in every
 # component generator -> regenerate all previews -> tag vX.Y.Z + move vX.
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 
 # --------------------------------------------------------------------------
 # brand palettes
@@ -52,6 +52,7 @@ PALETTES = {
         "glow_op": 0.10,
         "grain": "#FFFFFF",
         "fil_op": 0.05,
+        "edge_op": 0.20,
     },
     "light": {
         "bg_top": "#FFFFFF",
@@ -76,6 +77,59 @@ PALETTES = {
         "glow_op": 0.06,
         "grain": "#8F6F2C",
         "fil_op": 0.035,
+        "edge_op": 0.16,
+    },
+    "rose": {
+        # Rose Gold — warm ivory paper, rosy gilding
+        "bg_top": "#FFF9F6",
+        "bg_mid": "#FDF2EC",
+        "bg_bottom": "#F6E7DE",
+        "line": "#EBD3C6",
+        "line_soft": "#F3E2D8",
+        "text": "#4A2C33",
+        "muted": "#8A6A6F",
+        "dim": "#B2959A",
+        "gold": "#C98A7A",
+        "gold_bright": "#E0A992",
+        "sub": "#A0807F",
+        "star": "#C98A7A",
+        "star_op": 0.18,
+        "row_sub": "#5C3D42",
+        "panel": "#FFFCFA",
+        "panel_top": "#FCEFE8",
+        "nebula": "#E8B8A6",
+        "neb_op_g": 0.16,
+        "neb_op_b": 0.18,
+        "glow_op": 0.08,
+        "grain": "#C98A7A",
+        "fil_op": 0.045,
+        "edge_op": 0.17,
+    },
+    "ocean": {
+        # Deep Sea — cold navy-teal, moonlight silver-blue gilding
+        "bg_top": "#04101C",
+        "bg_mid": "#071828",
+        "bg_bottom": "#0E2B3E",
+        "line": "#1E4457",
+        "line_soft": "#143244",
+        "text": "#EAF4F7",
+        "muted": "#93AFBB",
+        "dim": "#6E8B97",
+        "gold": "#7FB6C9",
+        "gold_bright": "#C4E3EE",
+        "sub": "#7C97A3",
+        "star": "#EAF4F7",
+        "star_op": 0.35,
+        "row_sub": "#CFE3EA",
+        "panel": "#0A2030",
+        "panel_top": "#12354A",
+        "nebula": "#3E7E96",
+        "neb_op_g": 0.20,
+        "neb_op_b": 0.18,
+        "glow_op": 0.12,
+        "grain": "#FFFFFF",
+        "fil_op": 0.05,
+        "edge_op": 0.22,
     },
 }
 
@@ -175,6 +229,30 @@ def filigree(pal, uid="1"):
     )
 
 
+def edge_marks(w, h, pal):
+    """Postcard letterpress edges — hairline text bands along all four sides:
+    two horizontal marquees (top/bottom) and two vertical columns (left/right).
+    Very low opacity, gold — a quiet 'printed stationery' signature."""
+    g = pal["gold"]
+    op = pal.get("edge_op", 0.18)
+    top = "P R O F I L E   V E R S E   \u2726   \u661f\u591c\u9381\u91d1   \u2726   ZERO SERVER   \u2726   GITHUB API   \u2726   " * 2
+    bot = "R E A L   D A T A   \u2726   MIT LICENSE   \u2726   \u6bcf\u65e5\u81ea\u52a8\u5237\u65b0   \u2726   \u96f6\u670d\u52a1\u5668   \u2726   " * 2
+    left = "P R O F I L E   V E R S E   \u2726   " * 2
+    right = "M A D E   F O R   G I T H U B   \u2726   " * 2
+    bw = w - 52
+    bh = h - 52
+    return (
+        '<text x="26" y="9" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d">%s</text>'
+        '<text x="26" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d">%s</text>'
+        '<text x="8" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d" transform="rotate(-90 8 %d)">%s</text>'
+        '<text x="%d" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d" transform="rotate(-90 %d %d)">%s</text>'
+        % (FONT, g, op, bw, top,
+           h - 10, FONT, g, op, bw, bot,
+           h - 26, FONT, g, op, bh, h - 26, left,
+           w - 12, h - 26, FONT, g, op, bh, w - 12, h - 26, right)
+    )
+
+
 def corner_marks(w, h, pal, ln=11):
     """Four thin gold L-shaped corner ticks + inner diamond studs — the
     'framed print' detail."""
@@ -256,6 +334,7 @@ def card_bg(pal, w, h):
         '<rect x="0.5" y="0.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="1"/>'
         '<rect x="2.5" y="2.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="0.6" opacity="0.55"/>'
         '%s'
+        '%s'
         % (
             pal["bg_top"], pal.get("bg_mid", pal["bg_top"]), pal["bg_bottom"],
             pal["gold"], pal.get("neb_op_g", 0.16), pal["bg_top"],
@@ -267,6 +346,7 @@ def card_bg(pal, w, h):
             microdots(w, h, pal),
             w - 1, h - 1, pal["line"],
             w - 5, h - 5, pal.get("line_soft", pal["line"]),
+            edge_marks(w, h, pal),
             corner_marks(w, h, pal),
         )
     )

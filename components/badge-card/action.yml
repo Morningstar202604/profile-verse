@@ -26,7 +26,7 @@ inputs:
     required: false
     default: "${{ github.token }}"
   theme:
-    description: "Color theme: dark (deep blue) or light (paper white)"
+    description: "Theme: dark (midnight) | light (ivory) | rose (rose gold) | ocean (deep sea)"
     required: false
     default: "dark"
 
