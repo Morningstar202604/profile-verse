@@ -1,0 +1,32 @@
+name: "Profile Stats Card"
+description: >-
+  [Profile Verse] A differentiated stats card: followers / public repos / total
+  stars as hero numbers on golden orbit arcs over a starfield.
+author: "Morningstar202604"
+branding:
+  icon: "star"
+  color: "yellow"
+
+inputs:
+  user:
+    description: "GitHub username"
+    required: true
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "stats-card.svg"
+  token:
+    description: "GitHub token (defaults to the workflow's github.token)"
+    required: false
+    default: "${{ github.token }}"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate stats card"
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        USER: ${{ inputs.user }}
+        OUTPUT: ${{ inputs.output }}
+      run: python3 "${{ github.action_path }}/generate_stats_card.py"

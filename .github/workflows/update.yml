@@ -1,4 +1,4 @@
-name: Refresh Impact Card Preview
+name: Refresh Preview Cards
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: impact-card-preview
+  group: profile-verse-preview
   cancel-in-progress: true
 
 jobs:
@@ -19,21 +19,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate impact card
+      - name: Impact card
         uses: ./components/impact-card
         with:
           users: Morningstar202604
           output: components/impact-card/preview/impact-card.svg
 
+      - name: Stats card
+        uses: ./components/stats-card
+        with:
+          user: Morningstar202604
+          output: components/stats-card/preview/stats-card.svg
+
+      - name: Streak card
+        uses: ./components/streak-card
+        with:
+          user: Morningstar202604
+          output: components/streak-card/preview/streak-card.svg
+
+      - name: Typing card
+        uses: ./components/typing-card
+        with:
+          output: components/typing-card/preview/typing-card.svg
+
       - name: Commit & push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add components/impact-card/preview/impact-card.svg
+          git add components/*/preview/*.svg
           if git diff --cached --quiet; then
             echo "no changes"
           else
-            git commit -m "chore: refresh impact card preview [skip ci]"
+            git commit -m "chore: refresh preview cards [skip ci]"
             git pull --rebase origin main || git rebase --abort
             git push || { git fetch origin && git rebase origin/main && git push; }
           fi

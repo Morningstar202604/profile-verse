@@ -1,0 +1,28 @@
+name: "Typing Card"
+description: >-
+  [Profile Verse] A differentiated slogan banner: text types itself over a
+  starfield with a gold cursor, via pure SVG + SMIL animation. No server, no JS.
+author: "Morningstar202604"
+branding:
+  icon: "type"
+  color: "yellow"
+
+inputs:
+  phrases:
+    description: "Phrases to type, semicolon-separated (max 3)"
+    required: false
+    default: "夜观星象，以代码作舟;Code under the stars, ship with the dawn;Full-stack AI engineer"
+  output:
+    description: "Output path for the generated SVG"
+    required: false
+    default: "typing-card.svg"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Generate typing card"
+      shell: bash
+      env:
+        PHRASES: ${{ inputs.phrases }}
+        OUTPUT: ${{ inputs.output }}
+      run: python3 "${{ github.action_path }}/generate_typing_card.py"
