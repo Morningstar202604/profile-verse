@@ -23,7 +23,7 @@ FONT_CN = "'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif"
 # Semantic version of the design system & component suite.
 # Release flow: bump here -> bump the "· vX.Y.Z" footer literal in every
 # component generator -> regenerate all previews -> tag vX.Y.Z + move vX.
-VERSION = "1.3.0"
+VERSION = "1.3.1"
 
 # --------------------------------------------------------------------------
 # brand palettes
@@ -77,7 +77,7 @@ PALETTES = {
         "glow_op": 0.06,
         "grain": "#8F6F2C",
         "fil_op": 0.035,
-        "edge_op": 0.16,
+        "edge_op": 0.20,
     },
     "rose": {
         # Rose Gold — warm ivory paper, rosy gilding
@@ -103,7 +103,7 @@ PALETTES = {
         "glow_op": 0.08,
         "grain": "#C98A7A",
         "fil_op": 0.045,
-        "edge_op": 0.17,
+        "edge_op": 0.20,
     },
     "ocean": {
         # Deep Sea — cold navy-teal, moonlight silver-blue gilding
@@ -230,27 +230,43 @@ def filigree(pal, uid="1"):
 
 
 def edge_marks(w, h, pal):
-    """Postcard letterpress edges — hairline text bands along all four sides:
-    two horizontal marquees (top/bottom) and two vertical columns (left/right).
-    Very low opacity, gold — a quiet 'printed stationery' signature."""
+    """Postcard letterpress edges — hairline marquee bands along the top and
+    bottom, plus vertical monograms on the sides when the card is tall enough.
+
+    Natural glyph widths are measured (chromium) once: ~179px per horizontal
+    repeat, ~63px per vertical repeat at font-size 5.5. Repeat counts are
+    derived from the band length so textLength only ever *gently* letter-spaces
+    (never squeezes glyphs into overlapping blobs); vertical columns keep
+    natural spacing, are vertically centered, and are skipped on cards too
+    short to fit even one repeat.
+    """
     g = pal["gold"]
     op = pal.get("edge_op", 0.18)
-    top = "P R O F I L E   V E R S E   \u2726   \u661f\u591c\u9381\u91d1   \u2726   ZERO SERVER   \u2726   GITHUB API   \u2726   " * 2
-    bot = "R E A L   D A T A   \u2726   MIT LICENSE   \u2726   \u6bcf\u65e5\u81ea\u52a8\u5237\u65b0   \u2726   \u96f6\u670d\u52a1\u5668   \u2726   " * 2
-    left = "P R O F I L E   V E R S E   \u2726   " * 2
-    right = "M A D E   F O R   G I T H U B   \u2726   " * 2
+    top = "P R O F I L E   V E R S E   \u2726   \u661f\u591c\u9381\u91d1   \u2726   ZERO SERVER   \u2726   GITHUB API   \u2726"
+    bot = "R E A L   D A T A   \u2726   MIT LICENSE   \u2726   \u6bcf\u65e5\u81ea\u52a8\u5237\u65b0   \u2726   \u96f6\u670d\u52a1\u5668   \u2726"
+    mon = "P R O F I L E   V E R S E   \u2726   "
+    nat_h = 179.0
+    nat_v = 63.0
     bw = w - 52
-    bh = h - 52
-    return (
+    nh = max(1, int(bw / nat_h))
+    out = (
         '<text x="26" y="9" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d">%s</text>'
         '<text x="26" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d">%s</text>'
-        '<text x="8" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d" transform="rotate(-90 8 %d)">%s</text>'
-        '<text x="%d" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" textLength="%d" transform="rotate(-90 %d %d)">%s</text>'
-        % (FONT, g, op, bw, top,
-           h - 10, FONT, g, op, bw, bot,
-           h - 26, FONT, g, op, bh, h - 26, left,
-           w - 12, h - 26, FONT, g, op, bh, w - 12, h - 26, right)
+        % (FONT, g, op, bw, top * nh, h - 10, FONT, g, op, bw, bot * nh)
     )
+    bh = h - 52
+    nv = max(0, int(bh / nat_v))
+    if nv >= 1:
+        span = nv * nat_v
+        y0 = int(h - 26 - (bh - span) / 2)      # vertically center the column
+        text = mon * nv
+        for x in (8, w - 12):
+            out += (
+                '<text x="%d" y="%d" font-family="%s" font-size="5.5" fill="%s" opacity="%s" '
+                'transform="rotate(-90 %d %d)">%s</text>'
+                % (x, y0, FONT, g, op, x, y0, text)
+            )
+    return out
 
 
 def corner_marks(w, h, pal, ln=11):

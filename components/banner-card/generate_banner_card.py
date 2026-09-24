@@ -95,6 +95,7 @@ def main():
             '%s'
             '<rect x="0.5" y="0.5" width="%d" height="%d" fill="none" stroke="%s" stroke-width="1"/>'
             '%s'
+            '%s'
             % (
                 pal["bg_top"], pal.get("bg_mid", pal["bg_top"]), pal["bg_bottom"],
                 pal["gold"], pal["bg_top"],
@@ -105,6 +106,7 @@ def main():
                 stars(pal),
                 th.microdots(W, H, pal),
                 W - 1, H - 1, pal["line"],
+                th.edge_marks(W, H, pal),
                 th.corner_marks(W, H, pal),
             )
         )
@@ -119,7 +121,7 @@ def main():
             '<path d="M480 138 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.95"/>'
             '<text x="480" y="170" text-anchor="middle" font-family="%s" font-size="13.5" letter-spacing="2.5" fill="%s">%s</text>'
             '<text x="28" y="224" font-family="%s" font-size="9.5" letter-spacing="1" fill="%s">PROFILE VERSE</text>'
-            '<text x="932" y="224" text-anchor="end" font-family="%s" font-size="9.5" letter-spacing="1.5" fill="%s">banner-card · v1.3.0</text>'
+            '<text x="932" y="224" text-anchor="end" font-family="%s" font-size="9.5" letter-spacing="1.5" fill="%s">banner-card · v1.3.1</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),

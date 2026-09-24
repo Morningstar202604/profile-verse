@@ -4,6 +4,18 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [1.3.1] - 2026-09-25
+
+### Fixed
+- **Postcard edges refined**: marquee repeat counts now use measured glyph
+  widths so textLength only ever letter-spaces gently (no more squeezed
+  overlapping glyphs); vertical monograms keep natural spacing, are vertically
+  centered, and are skipped on cards too short to fit even one repeat.
+- **banner-card** was missing the edge texture (own background builder) — the
+  letterpress marquees + monograms are now applied there too.
+- Light/Rose edge opacity raised (0.16/0.17 → 0.20) for a visible-but-subtle
+  signature on paper.
+
 ## [1.3.0] - 2026-09-24
 
 ### Added
