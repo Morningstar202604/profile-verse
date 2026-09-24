@@ -66,6 +66,7 @@ jobs:
 | `token` | 否 | `github.token` | 一般不用改；私有数据场景可传带权限的 token |
 | `max_prs` | 否 | `300` | 每个用户最多扫描的已合并 PR 数 |
 | `max_top` | 否 | `5` | 卡片上展示的 TOP 仓库数 |
+| `theme` | 否 | `dark` | 颜色主题：`dark`（深蓝星空）或 `light`（米白纸面） |
 
 ## 工作原理
 

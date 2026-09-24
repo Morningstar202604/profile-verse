@@ -28,6 +28,10 @@ inputs:
     description: "Max top repositories shown on the card"
     required: false
     default: "5"
+  theme:
+    description: "Color theme: dark (deep blue) or light (paper white)"
+    required: false
+    default: "dark"
 
 runs:
   using: "composite"
@@ -40,4 +44,5 @@ runs:
         OUTPUT: ${{ inputs.output }}
         MAX_PR: ${{ inputs.max_prs }}
         MAX_TOP: ${{ inputs.max_top }}
+        THEME: ${{ inputs.theme }}
       run: python3 "${{ github.action_path }}/generate_impact_card.py"

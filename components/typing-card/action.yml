@@ -16,6 +16,10 @@ inputs:
     description: "Output path for the generated SVG"
     required: false
     default: "typing-card.svg"
+  theme:
+    description: "Color theme: dark (deep blue) or light (paper white)"
+    required: false
+    default: "dark"
 
 runs:
   using: "composite"
@@ -25,4 +29,5 @@ runs:
       env:
         PHRASES: ${{ inputs.phrases }}
         OUTPUT: ${{ inputs.output }}
+        THEME: ${{ inputs.theme }}
       run: python3 "${{ github.action_path }}/generate_typing_card.py"

@@ -29,6 +29,7 @@
 | --- | --- | --- | --- |
 | `phrases` | 否 | 默认三条示例标语 | 分号分隔，最多 3 条 |
 | `output` | 否 | `typing-card.svg` | 输出路径 |
+| `theme` | 否 | `dark` | 颜色主题：`dark`（深蓝星空）或 `light`（米白纸面） |
 
 ## License
 

@@ -15,6 +15,10 @@
 
 ![Typing Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/typing-card/preview/typing-card.svg)
 
+![Contribution Grid Card](https://cdn.jsdelivr.net/gh/Morningstar202604/profile-verse@main/components/contrib-grid-card/preview/contrib-grid-card.svg)
+
+> 每张卡都有 **`dark`（深蓝星空）与 `light`（米白纸面）双主题**，加一行 `theme: light` 即可切换，浅色主页也能用。
+
 ## 为什么用 Profile Verse
 
 - **零服务器、零成本**：GitHub Actions 定时生成 SVG，任何人一行 `<img>` 或 `uses:` 即可引用，不花钱、不绑卡
@@ -31,12 +35,12 @@
 | [stats-card](components/stats-card/) | 统计卡：关注/仓库/已合并 PR · 数字骑星轨 | 已发布 | `uses: .../components/stats-card@v1` |
 | [streak-card](components/streak-card/) | 连续贡献卡 · 星轨环中央亮星 | 已发布 | `uses: .../components/streak-card@v1` |
 | [typing-card](components/typing-card/) | 标语横幅 · 星空打字机 + 金色光标 | 已发布 | `uses: .../components/typing-card@v1` |
-| contrib-grid-card | 3D 等距贡献图（主页 3D 统计的差异化标杆） | 规划中 | — |
+| [contrib-grid-card](components/contrib-grid-card/) | 3D 等距贡献柱 · 替换第三方 3D Action | 已发布 | `uses: .../components/contrib-grid-card@v1` |
 | tech-stack-card | 技术栈星座图 | 规划中 | — |
 | banner-card | 星空头图 / 尾图 | 规划中 | — |
 | badge-card | 金色徽章 | 规划中 | — |
 
-> 主页替换进度：P1（替换外部服务）已完成——typing / streak / stats 均可替换原外部组件；P2（替换第三方 Action 的 3D 贡献图）进行中。
+> 主页替换进度：P1（替换外部服务）已完成——typing / streak / stats 均可替换原外部组件；P2（替换第三方 Action 的 3D 贡献图）已完成——contrib-grid-card 上线。
 
 ## 快速开始（以 impact-card 为例）
 
@@ -61,9 +65,9 @@ README 里一行引用：
 
 ## 设计规范（差异化 + 不拥挤原则）
 
-- **一眼特征**：每张卡一个独特形态（星轨 / 星环 / 打字机 / 3D 柱），不做撞脸方案
+- **一眼特征**：每张卡一个独特形态（星轨 / 星环 / 打字机 / 3D 等距柱），不做撞脸方案
 - 单卡单主题，640 宽横版，大数字 + 少文字，留白优先
-- 品牌色：深蓝 `#0B1026` + 金 `#C9A86A` + 星空点，主题在 `core/theme.py` 一处维护
+- 品牌色：深蓝 `#0B1026` + 金 `#C9A86A` + 星空点；**双主题**（`dark` / `light`）在 `core/theme.py` 一处维护
 - 数据真实：统一走 `core/github.py`，全部卡每日自动刷新，卡片标注数据来源与更新时间
 
 ## 目录结构
@@ -75,7 +79,8 @@ profile-verse/
 │   ├── impact-card/          组件 = 生成脚本 + SVG 模板 + action.yml + README + preview
 │   ├── stats-card/
 │   ├── streak-card/
-│   └── typing-card/
+│   ├── typing-card/
+│   └── contrib-grid-card/
 ├── .github/workflows/        本仓库自刷新示例
 └── README.md                 组件目录页
 ```

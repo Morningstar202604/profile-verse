@@ -1,10 +1,11 @@
-name: "Streak Card"
+name: "Contribution Grid Card (3D)"
 description: >-
-  [Profile Verse] A differentiated streak card: current streak as the star at
-  the centre of a golden orbital ring, with longest streak and yearly total.
+  [Profile Verse] Your GitHub contribution calendar rendered as a 3D isometric
+  field of gold columns. A fully self-built replacement for third-party
+  contribution animations — zero server, no third-party action, pure stdlib SVG.
 author: "Morningstar202604"
 branding:
-  icon: "star"
+  icon: "bar-chart"
   color: "yellow"
 
 inputs:
@@ -14,7 +15,7 @@ inputs:
   output:
     description: "Output path for the generated SVG"
     required: false
-    default: "streak-card.svg"
+    default: "contrib-grid-card.svg"
   token:
     description: "GitHub token (defaults to the workflow's github.token)"
     required: false
@@ -27,11 +28,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Generate streak card"
+    - name: "Generate contribution grid"
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
         USER: ${{ inputs.user }}
         OUTPUT: ${{ inputs.output }}
         THEME: ${{ inputs.theme }}
-      run: python3 "${{ github.action_path }}/generate_streak_card.py"
+      run: python3 "${{ github.action_path }}/generate_contrib_grid_card.py"

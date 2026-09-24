@@ -4,11 +4,11 @@
 Profile Stats Card — Profile Verse component
 ---------------------------------------------
 A differentiated "stats" card: three hero numbers (followers / public repos /
-total stars) sitting on golden orbit arcs over a starfield. Signature look:
+merged PRs) sitting on golden orbit arcs over a starfield. Signature look:
 planets-on-orbits, not a plain grid.
 
 Env: GH_TOKEN (required) · USER (default Morningstar202604) · OUTPUT
-     (default stats-card.svg)
+     (default stats-card.svg) · THEME (dark|light)
 
 Part of Profile Verse: https://github.com/Morningstar202604/profile-verse
 """
@@ -25,19 +25,21 @@ from core import theme as th  # noqa: E402
 
 OUTPUT = os.environ.get("OUTPUT", "stats-card.svg")
 USER = os.environ.get("USER", "Morningstar202604")
+THEME = os.environ.get("THEME", "dark")
 
 W, H = 640, 300
 
 
-def orbit(x, y, rx, ry, rot):
+def orbit(x, y, rx, ry, rot, pal):
     return '<ellipse cx="%d" cy="%d" rx="%d" ry="%d" fill="none" stroke="%s" stroke-opacity="0.35" transform="rotate(%d %d %d)"/>' % (
-        x, y, rx, ry, th.GOLD, rot, x, y)
+        x, y, rx, ry, pal["gold"], rot, x, y)
 
 
 def main():
     if not gh.token():
         sys.stderr.write("error: GH_TOKEN is required.\n")
         return 1
+    pal = th.palette(THEME)
     try:
         prof = gh.fetch_user(USER)
         followers = int(prof.get("followers", 0))
@@ -54,7 +56,7 @@ def main():
             '<text x="%d" y="186" text-anchor="middle" font-family="%s" font-size="34" font-weight="700" fill="%s">%s</text>'
             '<text x="%d" y="212" text-anchor="middle" font-family="%s" font-size="12" fill="%s">%s</text>'
             '<circle cx="%d" cy="228" r="2" fill="%s"/>'
-            % (x, th.FONT, th.GOLD_BRIGHT, th.esc(v), x, th.FONT, th.MUTED, th.esc(label), x, th.GOLD)
+            % (x, th.FONT, pal["gold_bright"], th.esc(v), x, th.FONT, pal["muted"], th.esc(label), x, pal["gold"])
             for x, v, label in blocks
         )
 
@@ -71,14 +73,14 @@ def main():
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
-                th.card_bg(W, H),
-                th.FONT, th.GOLD_BRIGHT,
-                th.FONT, "#7C87A3", date,
-                th.FONT, th.TEXT, th.esc(USER),
-                th.LINE,
-                orbit(320, 170, 300, 70, -6) + orbit(320, 170, 300, 70, 6) + orbit(320, 170, 300, 52, 0),
+                th.card_bg(pal, W, H),
+                th.FONT, pal["gold_bright"],
+                th.FONT, pal["sub"], date,
+                th.FONT, pal["text"], th.esc(USER),
+                pal["line"],
+                orbit(320, 170, 300, 70, -6, pal) + orbit(320, 170, 300, 70, 6, pal) + orbit(320, 170, 300, 52, 0, pal),
                 nums,
-                276, th.FONT, th.DIM,
+                276, th.FONT, pal["dim"],
             )
         )
         os.makedirs(os.path.dirname(os.path.abspath(OUTPUT)) or ".", exist_ok=True)

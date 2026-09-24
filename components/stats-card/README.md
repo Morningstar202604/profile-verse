@@ -28,6 +28,7 @@
 | `user` | 是 | — | GitHub 用户名 |
 | `output` | 否 | `stats-card.svg` | 输出路径 |
 | `token` | 否 | `github.token` | 一般不用改 |
+| `theme` | 否 | `dark` | 颜色主题：`dark`（深蓝星空）或 `light`（米白纸面） |
 
 数据真实来自 GitHub API（关注者 / 公开仓库 / 已合并 PR），每日自动刷新。
 

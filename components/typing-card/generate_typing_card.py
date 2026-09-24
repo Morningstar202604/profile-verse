@@ -8,6 +8,7 @@ starfield with a gold cursor, looping through your phrases. Pure SVG + SMIL
 animation, so it animates anywhere an <img> renders — no server, no JS.
 
 Env: PHRASES (semicolon-separated, default below) · OUTPUT (default typing-card.svg)
+     · THEME (dark|light)
 
 Part of Profile Verse: https://github.com/Morningstar202604/profile-verse
 """
@@ -21,6 +22,7 @@ sys.path.insert(0, _ROOT)
 from core import theme as th  # noqa: E402
 
 OUTPUT = os.environ.get("OUTPUT", "typing-card.svg")
+THEME = os.environ.get("THEME", "dark")
 PHRASES = [p.strip() for p in os.environ.get("PHRASES", "夜观星象，以代码作舟;Code under the stars, ship with the dawn;Full-stack AI engineer").split(";") if p.strip()][:3]
 
 W, H = 640, 120
@@ -80,6 +82,7 @@ def letter_anim(phrase_idx, k, lens, starts, T):
 
 
 def main():
+    pal = th.palette(THEME)
     try:
         lens = [len(p) for p in PHRASES]
         T, starts = build_timeline(PHRASES)
@@ -99,7 +102,7 @@ def main():
             texts.append(
                 '<text x="320" y="66" text-anchor="middle" font-family="%s" font-size="%d" '
                 'font-weight="600" fill="%s" letter-spacing="1">%s</text>'
-                % (th.FONT, FS, th.GOLD_BRIGHT, "".join(tspans))
+                % (th.FONT, FS, pal["gold_bright"], "".join(tspans))
             )
 
         max_w = max(total_w(p) for p in PHRASES)
@@ -107,7 +110,7 @@ def main():
         cursor = (
             '<rect x="%.1f" y="46" width="3.5" height="22" rx="1.5" fill="%s">'
             '<animate attributeName="opacity" values="1;0.1;1" dur="0.9s" repeatCount="indefinite"/>'
-            '</rect>' % (cursor_x, th.GOLD)
+            '</rect>' % (cursor_x, pal["gold"])
         )
 
         svg = (
@@ -118,9 +121,9 @@ def main():
             '</svg>'
             % (
                 W, H, W, H, th.esc(PHRASES[0]),
-                th.card_bg(W, H, seed=202607),
+                th.card_bg(pal, W, H),
                 "".join(texts), cursor,
-                th.FONT, th.DIM,
+                th.FONT, pal["dim"],
             )
         )
         os.makedirs(os.path.dirname(os.path.abspath(OUTPUT)) or ".", exist_ok=True)
