@@ -215,9 +215,7 @@ jobs:
     output: contrib-grid-card.svg
 ```
 
-> 🌱 **独立仓库版**：这张卡也可单独使用，见
-> [**Morningstar202604/contrib-grid-card**](https://github.com/Morningstar202604/contrib-grid-card)
-> —— `uses: Morningstar202604/contrib-grid-card@v1`，不必引入全家桶。
+> ✅ **单一入口**：原独立仓库已合并回本仓库 —— 这张卡只在全家桶里，一个仓库、一个 `@v1`。
 
 ### 6 · tech-stack-card — 技术栈星座
 主语言是中央亮星，其余语言沿金色椭圆环绕、虚线连成星座。来自真实仓库主语言统计。
@@ -309,11 +307,10 @@ profile-verse/
 └── README.md                 组件目录页
 ```
 
-## 🌱 独立仓库版 & 感谢墙
+## 🌱 一个仓库 · 一个入口
 
-任意卡都可一键拆出（`git subtree split --prefix=components/<卡名>`）推送成独立仓库，
-保留完整历史、支持 `@v1` 引用。已拆出：
-[`contrib-grid-card`](https://github.com/Morningstar202604/contrib-grid-card)。
+全部九张卡都从这个单一仓库发货 —— 一个 `@v1`、一个 workflow、零服务器。
+（`contrib-grid-card` 曾短暂拆出过独立仓，现已合并回来；旧链接会自动指向本仓库。）
 
 每周自动更新的 **⭐ Stargazer Wall 感谢墙**（`.github/workflows/star-wall.yml`）会
 在 Issues 里感谢每一位新 star，见 [Issues](https://github.com/Morningstar202604/profile-verse/issues)。

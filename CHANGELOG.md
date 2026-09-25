@@ -4,6 +4,14 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [1.4.0] - 2026-09-25
+
+### Changed
+- **One repo, one entry**: the standalone `contrib-grid-card` repository has
+  been merged back into this monorepo. All nine cards now ship from
+  `profile-verse` only — single `@v1`, single workflow. The old standalone
+  repo is archived and its README redirects here.
+
 ## [1.3.1] - 2026-09-25
 
 ### Fixed
