@@ -4,6 +4,17 @@ All notable changes to Profile Verse are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/).
 Versioning follows [Semantic Versioning](https://semver.org/lang/zh-CN/).
 
+## [1.4.1] - 2026-09-25
+
+### Fixed
+- **impact-card**: the "贡献分档 · 按仓库 star" heading no longer sits on the
+  tier-box top edge — heading and diamond stud moved up 16px so the tiers read
+  cleanly (visual polish pass caught by eyeball review).
+- **year-review-card**: medal panel labels were touching the panel bottom
+  edge; panels are 6px taller now, labels rest comfortably inside.
+- **contrib-grid-card**: the footer line was long enough to collide with the
+  "每日贡献" legend on the same row; shortened it so both sit apart.
+
 ## [1.4.0] - 2026-09-25
 
 ### Changed

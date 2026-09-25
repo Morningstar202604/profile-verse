@@ -141,7 +141,7 @@ def main():
             '<path d="M320 80 l4 4 l-4 4 l-4 -4 z" fill="%s" opacity="0.9"/>'
             '%s%s%s'
             '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub API · 按仓库主语言统计 · 每日自动刷新 · 零服务器</text>'
-            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">tech-stack-card · v1.4.0</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">tech-stack-card · v1.4.1</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),

@@ -214,8 +214,8 @@ def main():
             '%s'
             '%s'
             '%s'
-            '<text x="30" y="%d" font-family="%s" font-size="10" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新 · 零服务器</text>'
-            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">contrib-grid-card · v1.4.0</text>'
+            '<text x="30" y="%d" font-family="%s" font-size="10" fill="%s">数据来源 GitHub 贡献日历 · 每日自动刷新</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">contrib-grid-card · v1.4.1</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),

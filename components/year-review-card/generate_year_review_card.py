@@ -103,10 +103,10 @@ def main():
 
         date = _date.today().isoformat()
         ring = month_ring(months, pal)
-        m1 = metric(320, 120, 132, 64, "%s · %d" % (peak_name, peak_count), "最活跃月", pal)
-        m2 = metric(468, 120, 132, 64, "%d 天" % longest, "最长连续", pal)
-        m3 = metric(320, 196, 132, 64, "%d" % prs, "合并 PR", pal)
-        m4 = metric(468, 196, 132, 64, top_lang, "主力语言", pal)
+        m1 = metric(320, 120, 132, 70, "%s · %d" % (peak_name, peak_count), "最活跃月", pal)
+        m2 = metric(468, 120, 132, 70, "%d 天" % longest, "最长连续", pal)
+        m3 = metric(320, 198, 132, 70, "%d" % prs, "合并 PR", pal)
+        m4 = metric(468, 198, 132, 70, top_lang, "主力语言", pal)
 
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d" role="img" aria-label="Year in Review — %s">'
@@ -130,7 +130,7 @@ def main():
             '<text x="%d" y="%d" text-anchor="middle" font-family="%s" font-size="10" letter-spacing="2.5" fill="%s">贡献 · 近一年</text>'
             '%s%s%s%s'
             '<text x="30" y="%d" font-family="%s" font-size="10.5" fill="%s">数据来源 GitHub API · 每日自动刷新 · 零服务器</text>'
-            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">year-review-card · v1.4.0</text>'
+            '<text x="610" y="%d" text-anchor="end" font-family="%s" font-size="10" letter-spacing="1.5" fill="%s">year-review-card · v1.4.1</text>'
             '</svg>'
             % (
                 W, H, W, H, th.esc(USER),
